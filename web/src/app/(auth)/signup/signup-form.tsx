@@ -97,7 +97,7 @@ export function SignUpForm({
             {/* Social */}
             <div className={styles.socialRow}>
               <Link href={googleHref} className={styles.socialBtn}>
-                <Image src="/google.png.png" alt="Google" width={16} height={16} className={styles.socialIcon} />
+                <Image src="/google.png" alt="Google" width={16} height={16} className={styles.socialIcon} />
                 Sign up with Google
               </Link>
             </div>

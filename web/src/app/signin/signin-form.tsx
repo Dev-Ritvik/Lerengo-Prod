@@ -105,12 +105,12 @@ export function SignInForm({
             <div className={styles.socialRow}>
               {googleEnabled ? (
                 <Link href={googleHref} className={styles.socialBtn}>
-                  <Image src="/google.png.png" alt="Google" width={16} height={16} className={styles.socialIcon} />
+                  <Image src="/google.png" alt="Google" width={16} height={16} className={styles.socialIcon} />
                   Continue with Google
                 </Link>
               ) : (
                 <div className={`${styles.socialBtn} ${styles.socialBtnDisabled}`}>
-                  <Image src="/google.png.png" alt="Google" width={16} height={16} className={styles.socialIcon} style={{ filter: "grayscale(1)" }} />
+                  <Image src="/google.png" alt="Google" width={16} height={16} className={styles.socialIcon} style={{ filter: "grayscale(1)" }} />
                   Google Provider Disabled
                 </div>
               )}

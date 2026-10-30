@@ -54,3 +54,9 @@ coverage/
 # OS / Editor
 .DS_Store
 Thumbs.db
+
+# L6: large binary documents must not be committed to the repo
+*.pdf
+*.docx
+*.xlsx
+*.zip
