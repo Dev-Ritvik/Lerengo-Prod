@@ -77,7 +77,15 @@ function getSubdomainOrigin(request: NextRequest, subdomain: string, configuredO
     return null;
   }
 
-  const port = host.match(/:\d+$/)?.[0] ?? "";
+  // M5 fix: only carry the request port into derived subdomain origins for
+  // local development hosts. On real deployments a non-default port in the
+  // origin (e.g. https://skillgo.example.com:3000) behind proxies/misconfigs
+  // can produce invalid redirect targets and apex<->subdomain redirect loops.
+  const isLocalRoot =
+    hostname === "127.0.0.1" ||
+    hostname === "0.0.0.0" ||
+    hostname.endsWith(".localhost");
+  const port = isLocalRoot ? (host.match(/:\d+$/)?.[0] ?? "") : "";
   const rootHostname =
     hostname.split(".").length > 2
       ? hostname.split(".").slice(-2).join(".")
