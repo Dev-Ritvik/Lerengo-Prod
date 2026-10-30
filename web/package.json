@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test --experimental-strip-types test/security.test.ts",
+    "test": "tsx --test test/security.test.ts",
     "seed:sample": "node scripts/seed-sample-data.mjs",
     "provision:superadmin": "node scripts/provision-superadmin.mjs"
   },
@@ -50,6 +50,7 @@
     "postcss": "^8.5.16",
     "semgrep": "^0.0.1",
     "tailwindcss": "^4.3.1",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

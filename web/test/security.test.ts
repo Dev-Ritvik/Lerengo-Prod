@@ -75,7 +75,7 @@ test("local rate limiting blocks requests after the configured limit", () => {
   assert.ok(third.retryAfterSeconds >= 1);
 });
 
-test("client IP resolution prefers forwarded headers", () => {
+test("client IP resolution prefers forwarded headers when proxy trust is enabled", () => {
   const request = new Request("https://lerengo.test/api/example", {
     headers: {
       "x-forwarded-for": "203.0.113.10, 203.0.113.11",
@@ -83,7 +83,10 @@ test("client IP resolution prefers forwarded headers", () => {
     },
   });
 
-  assert.equal(resolveClientIp(request), "203.0.113.10");
+  assert.equal(
+    resolveClientIp(request, { TRUST_PROXY_HEADERS: "true" }),
+    "203.0.113.10",
+  );
 });
 
 test("client IP resolution prioritizes cf-connecting-ip over spoofed forwarded-for", () => {
@@ -95,7 +98,27 @@ test("client IP resolution prioritizes cf-connecting-ip over spoofed forwarded-f
     },
   });
 
-  assert.equal(resolveClientIp(request), "198.51.100.99");
+  assert.equal(
+    resolveClientIp(request, { TRUST_PROXY_HEADERS: "true" }),
+    "198.51.100.99",
+  );
+});
+
+test("client IP resolution ignores spoofable headers by default (H2)", () => {
+  const request = new Request("https://lerengo.test/api/example", {
+    headers: {
+      "cf-connecting-ip": "198.51.100.99",
+      "x-forwarded-for": "203.0.113.10",
+      "x-real-ip": "198.51.100.20",
+    },
+  });
+
+  // Without TRUST_PROXY_HEADERS=true, header values must never be trusted.
+  assert.equal(resolveClientIp(request, {}), "shared");
+  assert.equal(
+    resolveClientIp(request, { TRUST_PROXY_HEADERS: "false" }),
+    "shared",
+  );
 });
 
 test("global rate limit blocks after exceeding the configured limit", () => {

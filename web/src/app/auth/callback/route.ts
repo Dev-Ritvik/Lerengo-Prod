@@ -15,13 +15,19 @@ function buildSigninRedirect(url: URL, nextPath: string, error: string, detail?:
   if (detail) {
     response = setFlashMessage(response, "detail", detail);
   }
+  // One-shot: never let a stale pending-OAuth destination survive a failed login.
+  response.cookies.delete("lerengo_oauth_next");
   return response;
 }
 
 function copyCookies(source: NextResponse, target: NextResponse) {
   source.cookies.getAll().forEach(({ name, value, ...options }) => {
+    if (name === "lerengo_oauth_next") return; // handled explicitly below — never re-arm it
     target.cookies.set(name, value, options);
   });
+
+  // One-shot consumption: clear the pending OAuth destination after use.
+  target.cookies.delete("lerengo_oauth_next");
 
   return target;
 }
@@ -64,7 +70,17 @@ export async function GET(request: Request) {
   const code = requestUrl.searchParams.get("code");
   const tokenHash = requestUrl.searchParams.get("token_hash");
   const otpType = requestUrl.searchParams.get("type");
-  const nextPath = resolveSafeAppPath(requestUrl.searchParams.get("next"), "/campus-network");
+  // Priority for post-login destination:
+  //   1. ?next= query param (email-OTP links include it explicitly)
+  //   2. lerengo_oauth_next cookie set by /auth/login before the OAuth hop
+  //   3. safe default (/campus-network)
+  // The cookie is one-shot: it is cleared on every response we return below.
+  const cookieStoreForNext = await cookies();
+  const pendingOAuthNext = cookieStoreForNext.get("lerengo_oauth_next")?.value ?? null;
+  const nextPath = resolveSafeAppPath(
+    requestUrl.searchParams.get("next") ?? pendingOAuthNext,
+    "/campus-network",
+  );
   const hasSupabaseEnv =
     Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
     Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);

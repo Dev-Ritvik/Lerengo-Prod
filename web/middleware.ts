@@ -120,24 +120,63 @@ function getRedirectResponse(source: NextResponse, request: NextRequest, pathnam
   return copyCookies(source, redirectResponse);
 }
 
+// ── Subdomain host matching ────────────────────────────────────────────────
+// SECURITY: previously these used `hostname.startsWith("<sub>.")`, which also
+// matched attacker-controlled hosts like `admin.evil-lerengo.com` or
+// `campusgo.attacker.tld`. We now require the hostname to be exactly
+// `<sub>.<root>` (or a deeper label of OUR root domain), where the root domain
+// is derived from NEXT_PUBLIC_APP_URL (falling back to "lerengo").
+const KNOWN_ROOT_DOMAINS = new Set<string>(["lerengo"]);
+{
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  if (appUrl) {
+    try {
+      const rootHost = new URL(appUrl).hostname.replace(/^www\./, "");
+      if (rootHost && rootHost !== "localhost" && !rootHost.endsWith(".localhost")) {
+        KNOWN_ROOT_DOMAINS.add(rootHost);
+        // Also accept the registrable suffix (e.g. "example.com" from "app.example.com")
+        const parts = rootHost.split(".");
+        if (parts.length > 2) KNOWN_ROOT_DOMAINS.add(parts.slice(-2).join("."));
+      }
+    } catch {
+      // Ignore malformed env value; fall back to defaults.
+    }
+  }
+}
+
+function matchesSubdomainHost(hostname: string, subdomain: string): boolean {
+  if (!hostname.startsWith(`${subdomain}.`)) return false;
+  const remainder = hostname.slice(subdomain.length + 1);
+  if (!remainder || remainder.includes("..")) return false;
+  // Exact match against a known root domain: e.g. "admin.lerengo", "admin.example.com".
+  for (const root of KNOWN_ROOT_DOMAINS) {
+    if (remainder === root) return true;
+    // Deeper labels under our root: e.g. "admin.staging.example.com".
+    if (remainder.endsWith(`.${root}`)) return true;
+  }
+  // Local development convenience: "<sub>.localhost" and Vercel preview hosts.
+  if (remainder === "localhost" || remainder.endsWith(".localhost")) return true;
+  return false;
+}
+
 function isCampusNetworkHost(hostname: string) {
-  return hostname === "campusgo.lerengo" || hostname.startsWith("campusgo.");
+  return matchesSubdomainHost(hostname, "campusgo");
 }
 
 function isCoursesHost(hostname: string) {
-  return hostname === "skillgo.lerengo" || hostname.startsWith("skillgo.");
+  return matchesSubdomainHost(hostname, "skillgo");
 }
 
 function isLabsHost(hostname: string) {
-  return hostname === "forgego.lerengo" || hostname.startsWith("forgego.");
+  return matchesSubdomainHost(hostname, "forgego");
 }
 
 function isMentorGoHost(hostname: string) {
-  return hostname === "mentorgo.lerengo" || hostname.startsWith("mentorgo.");
+  return matchesSubdomainHost(hostname, "mentorgo");
 }
 
 function isHunterGoHost(hostname: string) {
-  return hostname === "huntergo.lerengo" || hostname.startsWith("huntergo.");
+  return matchesSubdomainHost(hostname, "huntergo");
 }
 
 function isRootPath(pathname: string) {
@@ -157,7 +196,10 @@ function shouldRedirectResetFlow(pathname: string) {
 }
 
 function shouldRedirectRootDomainSection(hostname: string, pathname: string) {
-  return !hostname.startsWith("admin.") && (pathname === "/admin" || pathname.startsWith("/admin/"));
+  // H1 fix follow-up: use the strict subdomain matcher instead of a raw
+  // `hostname.startsWith("admin.")` check so that lookalike hosts such as
+  // "admin.evil-lerengo.com" are NOT treated as our admin surface.
+  return !matchesSubdomainHost(hostname, "admin") && (pathname === "/admin" || pathname.startsWith("/admin/"));
 }
 
 function shouldRedirectCampusHostRoot(pathname: string) {
@@ -299,7 +341,7 @@ function getRequestProtocol(request: NextRequest) {
 }
 
 function isAdminHost(hostname: string) {
-  return hostname === "admin.lerengo" || hostname.startsWith("admin.");
+  return matchesSubdomainHost(hostname, "admin");
 }
 
 function copyCookies(source: NextResponse, target: NextResponse) {
@@ -308,6 +350,23 @@ function copyCookies(source: NextResponse, target: NextResponse) {
   });
 
   return target;
+}
+
+// ── Middleware-level admin gate (defense-in-depth for C2) ─────────────────
+// Page/API handlers already call requireAdminUser(), but if any future route
+// forgets its guard, this backstop blocks unauthenticated access to /admin/*
+// outright. Role verification remains at the page layer (the JWT alone does
+// not carry the app role); here we only enforce "must be signed in".
+const ADMIN_PUBLIC_PATHS = new Set([
+  "/admin/login",        // login surface itself
+  "/admin/forgot-password",
+  "/admin/reset-password",
+]);
+
+function isAdminSurfacePath(pathname: string) {
+  if (pathname !== "/admin" && !pathname.startsWith("/admin/")) return false;
+  const normalized = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+  return !ADMIN_PUBLIC_PATHS.has(normalized);
 }
 
 export async function middleware(request: NextRequest) {
@@ -357,6 +416,14 @@ export async function middleware(request: NextRequest) {
   }
 
   const { authUser, response } = await updateSession(request);
+
+  // ── Defense-in-depth: middleware-level admin gate (C2) ────────────────
+  // Any /admin/* surface except the login/reset flow requires a session.
+  // Role checks still live in requireAdminUser() at the page/API layer.
+  if (!pathname.startsWith("/api") && isAdminSurfacePath(pathname) && !authUser?.id) {
+    const loginTarget = adminHost ? "/signin" : "/admin/login";
+    return getRedirectResponse(response, request, `${loginTarget}?next=${encodeURIComponent(pathname)}`);
+  }
 
   if (!pathname.startsWith("/api") && adminHost) {
     if (isAdminLandingPath(pathname)) {

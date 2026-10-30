@@ -24,7 +24,30 @@ function getRateLimitStore() {
   return scope[RATE_LIMIT_STORE_KEY];
 }
 
-export function resolveClientIp(request: Request) {
+/**
+ * Resolve the client IP for rate-limit keying.
+ *
+ * SECURITY NOTE: `cf-connecting-ip`, `x-forwarded-for` and `x-real-ip` are
+ * set legitimately by Cloudflare / Vercel / well-configured reverse proxies,
+ * but they are trivially spoofable when the app is exposed directly (or
+ * behind a proxy that does not strip inbound copies of these headers).
+ * Trusting them unconditionally lets an attacker rotate header values to
+ * obtain unlimited independent rate-limit buckets.
+ *
+ * Therefore header trust is opt-in via TRUST_PROXY_HEADERS=true. When it is
+ * off (the safe default), every request shares the single "shared" bucket —
+ * coarse, but never bypassable via header spoofing. Deployments behind a
+ * trusted proxy (Vercel, Cloudflare) should set the flag to regain per-IP
+ * granularity.
+ */
+export function resolveClientIp(
+  request: Request,
+  env: Record<string, string | undefined> = process.env,
+) {
+  if (env.TRUST_PROXY_HEADERS !== "true") {
+    return "shared";
+  }
+
   const cfConnectingIp = request.headers.get("cf-connecting-ip")?.trim();
   const forwardedFor = request.headers
     .get("x-forwarded-for")

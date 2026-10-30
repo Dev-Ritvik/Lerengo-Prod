@@ -127,8 +127,12 @@ export async function GET(request: Request) {
     const { supabase, getResponse } = await createRouteHandlerSupabaseClient(requestUrl);
     const origin = process.env.NODE_ENV === "development" ? "http://localhost:3000" : requestUrl.origin;
     const callbackUrl = new URL("/auth/callback", origin);
-    // Removed callbackUrl.searchParams.set("next", nextPath) to avoid redirect_uri mismatch issues in Supabase.
 
+    // Preserve the intended post-login destination across the OAuth round-trip.
+    // We cannot append ?next= to `redirectTo` (Supabase validates redirect_uri
+    // against the exact allow-listed value), so we stash it in a short-lived,
+    // HttpOnly cookie that /auth/callback reads and clears after use.
+    const pendingNextCookieName = "lerengo_oauth_next";
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
@@ -137,8 +141,17 @@ export async function GET(request: Request) {
     });
 
     if (!error && data.url) {
-      console.log("Generated OAuth URL:", data.url);
+      // SECURITY: never log the authorization URL — it carries PKCE/state material.
       const redirectResponse = NextResponse.redirect(data.url);
+      if (nextPath !== "/") {
+        redirectResponse.cookies.set(pendingNextCookieName, nextPath, {
+          httpOnly: true,
+          sameSite: "lax",
+          secure: process.env.NODE_ENV === "production",
+          path: "/auth",
+          maxAge: 600, // 10 minutes — OAuth round-trip should complete well within this
+        });
+      }
       return copyCookies(getResponse(), redirectResponse);
     }
   } catch {
