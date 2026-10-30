@@ -423,7 +423,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const { authUser, response } = await updateSession(request);
+  const { authUser, response, authDegraded } = await updateSession(request);
 
   // ── Defense-in-depth: middleware-level admin gate (C2) ────────────────
   // Any /admin/* surface except the login/reset flow requires a session.
@@ -441,6 +441,20 @@ export async function middleware(request: NextRequest) {
     if (shouldRedirectToMainAdminLogin(pathname) || shouldRedirectResetFlow(pathname)) {
       return getRedirectResponse(response, request, "/admin/login");
     }
+  }
+
+  // ── M1: fail-safe for auth-gated rewrites ─────────────────────────────
+  // updateSession() fails open when the auth service is unreachable
+  // (authDegraded=true). For host-gated rewrites that would render
+  // /campus-network content we must NOT guess — serve 503 instead so a
+  // signed-in user's gated content is never rendered without a verified
+  // session, and Razorpay/monitoring can retry once auth recovers.
+  if (!pathname.startsWith("/api") && authDegraded && campusHost &&
+      (shouldRedirectCampusHostRoot(pathname) || pathname === "/campus-network")) {
+    return NextResponse.json(
+      { error: "auth_service_unavailable", message: "Authentication service is temporarily unavailable. Please retry." },
+      { status: 503, headers: { "x-auth-degraded": "1", "retry-after": "30" } },
+    );
   }
 
   if (!pathname.startsWith("/api") && campusHost && shouldRedirectCampusHostRoot(pathname)) {

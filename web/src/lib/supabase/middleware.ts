@@ -12,6 +12,7 @@ export async function updateSession(request: NextRequest) {
   if (!hasSupabaseEnv) {
     return {
       authUser: null as { id: string } | null,
+      authDegraded: false,
       response: NextResponse.next({
         request,
       }),
@@ -56,7 +57,8 @@ export async function updateSession(request: NextRequest) {
   const hasAuthCookies = request.cookies.getAll().some(c => c.name.startsWith("sb-") && c.name.endsWith("-auth-token"));
 
   if (!hasAuthCookies) {
-    return { authUser: null, response };
+    // Truly signed out (no auth cookies at all) — not a degraded state.
+    return { authUser: null, authDegraded: false, response };
   }
 
   // Refreshes session cookie on every request if needed.
@@ -82,14 +84,21 @@ export async function updateSession(request: NextRequest) {
   } catch {
     // Fail-open in middleware when auth service is temporarily unreachable.
     // Route-level guards/components already handle missing sessions safely.
+    // M1 fix: mark the response as auth-degraded so downstream layers (and
+    // operators) can tell that authUser=null here means "unknown", not
+    // "signed out". Middleware uses this flag to refuse rendering auth-gated
+    // rewrites while the auth service is down.
+    response.headers.set("x-auth-degraded", "1");
     return {
       authUser: null,
+      authDegraded: true,
       response,
     };
   }
 
   return {
     authUser,
+    authDegraded: false,
     response,
   };
 }

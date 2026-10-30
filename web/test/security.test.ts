@@ -265,3 +265,54 @@ test("M6: non-admin paths are unaffected by the role gate", () => {
   assert.equal(resolvePostAuthDestinationMirror({ role: "user" }, "/courses/dsa"), "/courses/dsa");
   assert.equal(resolvePostAuthDestinationMirror({ role: "user" }, "//evil.com"), "/");
 });
+
+// ── M2: cross-subdomain SSO cookie domain integration tests ─────────────
+// getSupabaseCookieOptions must keep the wide `.lerengo`-style domain for
+// any request whose host is a subdomain of the derived root (so sessions
+// work across skillgo./campusgo./admin.), and must fall back to host-scoped
+// cookies when the request host belongs to a different domain entirely
+// (e.g. *.vercel.app previews) so browsers don't silently drop cookies.
+import { getSupabaseCookieOptions } from "@/lib/supabase/cookie-options";
+
+test("M2: apex host keeps wide cookie domain", () => {
+  process.env.NEXT_PUBLIC_APP_URL = "https://lerengo.com";
+  delete process.env.NEXT_PUBLIC_AUTH_COOKIE_DOMAIN;
+  const opts = getSupabaseCookieOptions("lerengo.com");
+  assert.equal(opts.domain, ".lerengo.com");
+});
+
+test("M2: known subdomain request keeps wide cookie domain (cross-subdomain SSO)", () => {
+  process.env.NEXT_PUBLIC_APP_URL = "https://lerengo.com";
+  delete process.env.NEXT_PUBLIC_AUTH_COOKIE_DOMAIN;
+  for (const host of ["skillgo.lerengo.com", "campusgo.lerengo.com", "admin.lerengo.com"]) {
+    const opts = getSupabaseCookieOptions(host);
+    assert.equal(opts.domain, ".lerengo.com", `subdomain ${host} must share the wide cookie domain`);
+  }
+});
+
+test("M2: unrelated preview host falls back to host-scoped cookies", () => {
+  process.env.NEXT_PUBLIC_APP_URL = "https://lerengo.com";
+  delete process.env.NEXT_PUBLIC_AUTH_COOKIE_DOMAIN;
+  const opts = getSupabaseCookieOptions("my-app-git-preview.vercel.app");
+  assert.equal(opts.domain, undefined);
+});
+
+test("M2: explicit cookie domain env override wins", () => {
+  process.env.NEXT_PUBLIC_APP_URL = "https://lerengo.com";
+  process.env.NEXT_PUBLIC_AUTH_COOKIE_DOMAIN = "auth.example.net";
+  const opts = getSupabaseCookieOptions("skillgo.lerengo.com");
+  // Request host doesn't match the explicit domain -> safe host-scoped fallback.
+  assert.equal(opts.domain, undefined);
+  // Request host is under the explicit domain itself -> wide domain kept.
+  const sameRoot = getSupabaseCookieOptions("app.auth.example.net");
+  assert.equal(sameRoot.domain, ".auth.example.net");
+  delete process.env.NEXT_PUBLIC_AUTH_COOKIE_DOMAIN;
+});
+
+test("M2: localhost dev never sets a cookie domain", () => {
+  process.env.NEXT_PUBLIC_APP_URL = "http://localhost:3000";
+  delete process.env.NEXT_PUBLIC_AUTH_COOKIE_DOMAIN;
+  const opts = getSupabaseCookieOptions("localhost");
+  assert.equal(opts.domain, undefined);
+  assert.equal(opts.secure, false);
+});
