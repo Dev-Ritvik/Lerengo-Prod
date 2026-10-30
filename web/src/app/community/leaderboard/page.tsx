@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ProfileMenu } from "@/components/profile-menu";
+import { LogoutButton } from "@/components/logout-button";
 import { requireVerifiedProfile } from "@/lib/tenant";
 import { buildCommunityLeaderboardData } from "../data";
 import styles from "./page.module.css";
@@ -68,10 +69,10 @@ export default async function CommunityLeaderboardPage() {
         </div>
         <div className={styles.sidebarBottom}>
           <div aria-hidden="true" className={styles.sidebarDivider} />
-          <a className={styles.sidebarLogout} href="/auth/logout">
+          <LogoutButton className={styles.sidebarLogout}>
             <Image alt="" className={styles.sidebarIcon} height={28} src="/logout.png" width={28} />
             Log out
-          </a>
+          </LogoutButton>
         </div>
       </aside>
 

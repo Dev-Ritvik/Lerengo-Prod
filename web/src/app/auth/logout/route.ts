@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
-export async function GET(request: Request) {
+// L1 fix: primary logout is POST. Plain `<a href="/auth/logout">` links let any
+// third-party page (or an <img> tag) force-sign users out — CSRF logout. In-app
+// callers now submit a small POST form instead.
+export async function POST(request: Request) {
   const requestUrl = new URL(request.url);
   const supabase = await createServerSupabaseClient();
   try {
@@ -11,4 +14,10 @@ export async function GET(request: Request) {
   }
 
   return NextResponse.redirect(new URL("/", requestUrl.origin));
+}
+
+// Deprecated compatibility shim so existing bookmarks/external links keep
+// working during the transition window. Remove once all UI surfaces use POST.
+export async function GET(request: Request) {
+  return POST(request);
 }

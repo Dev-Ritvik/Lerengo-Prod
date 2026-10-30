@@ -1,0 +1,13 @@
+/* Reset button chrome so callers can reuse their existing link classes
+   (logoutItem / sidebarLogout) on the submit button without visual drift. */
+.form {
+  margin: 0;
+  padding: 0;
+}
+
+.default {
+  all: unset;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}

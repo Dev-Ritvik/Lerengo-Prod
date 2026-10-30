@@ -6,6 +6,7 @@ import { getSupabaseCookieOptions } from "@/lib/supabase/cookie-options";
 import { resolveSafeAppPath } from "@/lib/tenant";
 import type { Database } from "@/lib/supabase/types";
 import { setFlashMessage } from "@/lib/flash";
+import { copyCookies } from "@/lib/http-cookies";
 
 function buildSigninRedirect(url: URL, nextPath: string, error: string) {
   const destination = new URL("/signin", url.origin);
@@ -19,13 +20,8 @@ function resolveProvider(): "google" {
   return "google";
 }
 
-function copyCookies(source: NextResponse, target: NextResponse) {
-  source.cookies.getAll().forEach(({ name, value, ...options }) => {
-    target.cookies.set(name, value, options);
-  });
-
-  return target;
-}
+// L3 hygiene: shared helper replaces the local duplicate (plain copy, no
+// exclusions — login initiation must forward session-refresh cookies as-is).
 
 async function createRouteHandlerSupabaseClient(requestUrl: URL) {
   const cookieStore = await cookies();

@@ -6,6 +6,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ProfileMenu } from "@/components/profile-menu";
+import { LogoutButton } from "@/components/logout-button";
 import type { CommunityComment, CommunityDiscussion, MatchCard } from "../data";
 import styles from "./page.module.css";
 
@@ -292,10 +293,10 @@ export function CommunityPostDetailShell({
         </div>
         <div className={styles.sidebarBottom}>
           <div aria-hidden="true" className={styles.sidebarDivider} />
-          <a className={styles.sidebarLogout} href="/auth/logout">
+          <LogoutButton className={styles.sidebarLogout}>
             <Image alt="" className={styles.sidebarIcon} height={28} src="/logout.png" width={28} />
             Log out
-          </a>
+          </LogoutButton>
         </div>
       </aside>
 

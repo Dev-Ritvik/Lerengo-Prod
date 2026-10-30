@@ -7,6 +7,7 @@ import type { Database } from "@/lib/supabase/types";
 import { resolvePostAuthDestination, resolveSafeAppPath } from "@/lib/tenant";
 import { hasAdminJourneyRole } from "@/lib/auth-journey";
 import { setFlashMessage } from "@/lib/flash";
+import { copyCookies as sharedCopyCookies } from "@/lib/http-cookies";
 
 function buildSigninRedirect(url: URL, nextPath: string, error: string, detail?: string) {
   const destination = new URL("/signin", url.origin);
@@ -21,16 +22,14 @@ function buildSigninRedirect(url: URL, nextPath: string, error: string, detail?:
   return response;
 }
 
+// L3 hygiene: shared helper replaces the local duplicate. Callback semantics
+// preserved exactly — the one-shot OAuth destination cookie is never copied
+// back and is always cleared on every callback response (success or failure).
 function copyCookies(source: NextResponse, target: NextResponse) {
-  source.cookies.getAll().forEach(({ name, value, ...options }) => {
-    if (name === "lerengo_oauth_next") return; // handled explicitly below — never re-arm it
-    target.cookies.set(name, value, options);
+  return sharedCopyCookies(source, target, {
+    exclude: ["lerengo_oauth_next"],
+    deleteAfterCopy: ["lerengo_oauth_next"],
   });
-
-  // One-shot consumption: clear the pending OAuth destination after use.
-  target.cookies.delete("lerengo_oauth_next");
-
-  return target;
 }
 
 async function createRouteHandlerSupabaseClient(requestUrl: URL) {

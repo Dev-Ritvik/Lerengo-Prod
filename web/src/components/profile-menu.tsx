@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { TransitionLink } from "@/components/transition-link";
+import { LogoutButton } from "@/components/logout-button";
 import styles from "./profile-menu.module.css";
 
 type ProfileMenuProps = {
@@ -127,9 +128,7 @@ export function ProfileMenu({
               {adminUrl.includes("control") ? "Superadmin Control" : "Admin Workspace"}
             </TransitionLink>
           ) : null}
-          <a className={`${styles.menuItem} ${styles.logoutItem}`} href="/auth/logout" role="menuitem">
-            Log out
-          </a>
+          <LogoutButton className={`${styles.menuItem} ${styles.logoutItem}`} />
         </div>
       )}
     </div>

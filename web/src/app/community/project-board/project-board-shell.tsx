@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ProfileMenu } from "@/components/profile-menu";
+import { LogoutButton } from "@/components/logout-button";
 import type { CommunityDiscussion, Contributor, MatchCard, WeeklyUpdate } from "../data";
 import styles from "./project-board.module.css";
 
@@ -89,10 +90,10 @@ export function ProjectBoardShell({
 
         <div className={styles.sidebarBottom}>
           <div aria-hidden="true" className={styles.sidebarDivider} />
-          <a className={styles.sidebarLogout} href="/auth/logout">
+          <LogoutButton className={styles.sidebarLogout}>
             <Image alt="" className={styles.sidebarIcon} height={28} src="/logout.png" width={28} />
             Log out
-          </a>
+          </LogoutButton>
         </div>
       </aside>
 
