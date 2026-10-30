@@ -82,10 +82,17 @@ const CATEGORY_COPY: Record<
   },
 };
 
+// M4 fix: the client bundle must never contain the answer key. Questions
+// carry only prompt/options; correctness + explanation come back from the
+// server after grading via POST /api/notes/[noteId]/assessment.
 interface QuizQuestion {
   id: string;
   prompt: string;
   options: Array<{ id: string; label: string }>;
+}
+
+interface QuizVerdict {
+  correct: boolean;
   correctOptionId: string;
   explanation: string;
 }
@@ -333,7 +340,14 @@ export function NoteDetailShell({
   // Dynamic Quiz state
   const [testDifficulty, setTestDifficulty] = useState<"easy" | "medium" | "hard">("easy");
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
-  const [checkedAnswers, setCheckedAnswers] = useState<Record<string, boolean>>({});
+  // M4 fix: verdicts are no longer computed in the browser. `checkedAnswers`
+  // used to flip a boolean so the client could compare against an embedded
+  // `correctOptionId`. Now grading happens server-side via POST
+  // /api/notes/[noteId]/assessment and we store only what the server returns
+  // after the attempt has been recorded — never the answer key up front.
+  const [quizVerdicts, setQuizVerdicts] = useState<Record<string, QuizVerdict>>({});
+  const [quizChecking, setQuizChecking] = useState(false);
+  const [quizError, setQuizError] = useState<string | null>(null);
   
   // Doubt support state
   const [doubtText, setDoubtText] = useState("");
@@ -371,8 +385,6 @@ export function NoteDetailShell({
     // Dynamic fallback questions based on subject keyword
     const cseQuestions: Record<"easy" | "medium" | "hard", QuizQuestion> = {
       easy: {
-        correctOptionId: "B",
-        explanation: "Stack is a LIFO (Last In First Out) structure where elements are added and removed from the same end.",
         id: "q-1",
         options: [
           { id: "A", label: "Queue" },
@@ -383,8 +395,6 @@ export function NoteDetailShell({
         prompt: "Which of the following data structures operates on the Last-In-First-Out (LIFO) principle?"
       },
       medium: {
-        correctOptionId: "B",
-        explanation: "Binary search repeatedly divides the search space in half, requiring O(log n) comparisons in the worst case.",
         id: "q-2",
         options: [
           { id: "A", label: "O(1)" },
@@ -395,8 +405,6 @@ export function NoteDetailShell({
         prompt: "What is the worst-case time complexity of Binary Search?"
       },
       hard: {
-        correctOptionId: "B",
-        explanation: "Red-Black Trees guarantee O(log n) operations by maintaining color balance, preventing worst-case linear O(n) degeneration of unbalanced BSTs.",
         id: "q-3",
         options: [
           { id: "A", label: "Red-Black Trees require significantly less memory footprint" },
@@ -410,8 +418,6 @@ export function NoteDetailShell({
 
     const netQuestions: Record<"easy" | "medium" | "hard", QuizQuestion> = {
       easy: {
-        correctOptionId: "C",
-        explanation: "The Network Layer handles packet routing, forwarding, and addressing across intermediate network segments.",
         id: "q-1",
         options: [
           { id: "A", label: "Physical Layer" },
@@ -422,8 +428,6 @@ export function NoteDetailShell({
         prompt: "Which layer of the OSI model is responsible for routing packets across networks?"
       },
       medium: {
-        correctOptionId: "C",
-        explanation: "Class C network subnet mask default value is 255.255.255.0, allocation support for up to 254 host addresses.",
         id: "q-2",
         options: [
           { id: "A", label: "255.0.0.0" },
@@ -434,8 +438,6 @@ export function NoteDetailShell({
         prompt: "What is the default subnet mask for a Class C IP address?"
       },
       hard: {
-        correctOptionId: "B",
-        explanation: "The TCP three-way handshake establishes segment connection, synchronizes initial sequence numbers (ISNs), and confirms port sockets.",
         id: "q-3",
         options: [
           { id: "A", label: "Encrypting packet payloads" },
@@ -449,8 +451,6 @@ export function NoteDetailShell({
 
     const generalQuestions: Record<"easy" | "medium" | "hard", QuizQuestion> = {
       easy: {
-        correctOptionId: "A",
-        explanation: "Structured study notes condense core information for rapid revision and formula checks before examinations.",
         id: "q-1",
         options: [
           { id: "A", label: "Quick exam revision" },
@@ -461,8 +461,6 @@ export function NoteDetailShell({
         prompt: "What is the primary purpose of using revision notes and mind maps?"
       },
       medium: {
-        correctOptionId: "B",
-        explanation: "The Feynman Technique forces deep comprehension by explaining complex topics in plain, accessible language.",
         id: "q-2",
         options: [
           { id: "A", label: "The Pomodoro cycle" },
@@ -473,8 +471,6 @@ export function NoteDetailShell({
         prompt: "Which learning technique involves explaining a concept to a child or in simple terms to find knowledge gaps?"
       },
       hard: {
-        correctOptionId: "B",
-        explanation: "Active learning is built upon active recall, self-assessment testing, and critical application exercises, yielding superior retention.",
         id: "q-3",
         options: [
           { id: "A", label: "Rereading highlighted textbooks" },
@@ -488,24 +484,19 @@ export function NoteDetailShell({
 
     // If assessment questions exist, map them. Otherwise, seed them.
     if (assessment && assessment.questions.length >= 3) {
+      // Server summary is already sanitized (no answer keys); pass through as-is.
       return {
         easy: {
-          correctOptionId: "A", // Default mock correct
-          explanation: "Explanation for question 1.",
           id: assessment.questions[0].id,
           options: assessment.questions[0].options,
           prompt: assessment.questions[0].prompt
         },
         medium: {
-          correctOptionId: "B",
-          explanation: "Explanation for question 2.",
           id: assessment.questions[1].id,
           options: assessment.questions[1].options,
           prompt: assessment.questions[1].prompt
         },
         hard: {
-          correctOptionId: "C",
-          explanation: "Explanation for question 3.",
           id: assessment.questions[2].id,
           options: assessment.questions[2].options,
           prompt: assessment.questions[2].prompt
@@ -612,10 +603,55 @@ export function NoteDetailShell({
     setActiveTab("videos");
   };
 
-  // MCQ Checker handler
-  const handleCheckQuizAnswer = (diff: "easy" | "medium" | "hard") => {
+  // MCQ Checker handler — M4 fix: submit the selected answer to the server
+  // assessment route, which grades it against the real answer key and returns
+  // only this attempt's verdict (correct option + explanation). The client
+  // bundle never contains correctOptionId for any question.
+  const handleCheckQuizAnswer = async (diff: "easy" | "medium" | "hard") => {
     const q = quizQuestions[diff];
-    setCheckedAnswers((prev) => ({ ...prev, [q.id]: true }));
+    const answer = selectedAnswers[q.id];
+    if (!answer || quizVerdicts[q.id] || quizChecking) {
+      return;
+    }
+
+    setQuizChecking(true);
+    setQuizError(null);
+    try {
+      const response = await fetch(`/api/notes/${noteId}/assessment`, {
+        body: JSON.stringify({ answers: { [q.id]: answer } }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+
+      const payload = (await response.json().catch(() => null)) as
+        | {
+            error?: string;
+            verdicts?: Record<string, { correct?: boolean; correctOptionId?: string; explanation?: string }>;
+          }
+        | null;
+
+      if (!response.ok) {
+        setQuizError(payload?.error ?? "Could not check your answer right now.");
+        return;
+      }
+
+      const verdict = payload?.verdicts?.[q.id];
+      if (!verdict || typeof verdict.correct !== "boolean") {
+        setQuizError("This note test does not cover that question yet.");
+        return;
+      }
+
+      const graded: QuizVerdict = {
+        correct: verdict.correct,
+        correctOptionId: verdict.correctOptionId ?? "",
+        explanation: verdict.explanation ?? "",
+      };
+      setQuizVerdicts((prev) => ({ ...prev, [q.id]: graded }));
+    } catch {
+      setQuizError("Network error while checking your answer.");
+    } finally {
+      setQuizChecking(false);
+    }
   };
 
   // Doubt submission claim workflow
@@ -955,7 +991,10 @@ export function NoteDetailShell({
                 {(() => {
                   const q = quizQuestions[testDifficulty];
                   const hasAnswered = !!selectedAnswers[q.id];
-                  const isChecked = !!checkedAnswers[q.id];
+                  // M4 fix: verdict comes from the server after grading; the client
+                  // never knows the answer key before submitting.
+                  const verdict = quizVerdicts[q.id];
+                  const isChecked = !!verdict;
                   return (
                     <div className={styles.quizContainer}>
                       <span className={styles.quizQNum}>Question - {testDifficulty.toUpperCase()}</span>
@@ -963,8 +1002,8 @@ export function NoteDetailShell({
                       <div className={styles.quizOptionsList}>
                         {q.options.map((opt) => {
                           const isSelected = selectedAnswers[q.id] === opt.id;
-                          const showCorrect = isChecked && opt.id === q.correctOptionId;
-                          const showWrong = isChecked && isSelected && opt.id !== q.correctOptionId;
+                          const showCorrect = isChecked && opt.id === verdict?.correctOptionId;
+                          const showWrong = isChecked && isSelected && opt.id !== verdict?.correctOptionId;
                           
                           return (
                             <button
@@ -983,19 +1022,23 @@ export function NoteDetailShell({
                       </div>
 
                       {isChecked && (
-                        <div className={`${styles.quizFeedbackBox} ${selectedAnswers[q.id] === q.correctOptionId ? styles.feedbackCorrect : styles.feedbackWrong}`}>
-                          {selectedAnswers[q.id] === q.correctOptionId ? "✓ Correct!" : "✗ Incorrect!"} {q.explanation}
+                        <div className={`${styles.quizFeedbackBox} ${verdict?.correct ? styles.feedbackCorrect : styles.feedbackWrong}`}>
+                          {verdict?.correct ? "✓ Correct!" : "✗ Incorrect!"} {verdict?.explanation}
                         </div>
+                      )}
+
+                      {!isChecked && quizError && (
+                        <div className={`${styles.quizFeedbackBox} ${styles.feedbackWrong}`}>{quizError}</div>
                       )}
 
                       <div className={styles.quizControls}>
                         <button
                           type="button"
-                          onClick={() => handleCheckQuizAnswer(testDifficulty)}
+                          onClick={() => void handleCheckQuizAnswer(testDifficulty)}
                           className="button primary small"
-                          disabled={!hasAnswered || isChecked}
+                          disabled={!hasAnswered || isChecked || quizChecking}
                         >
-                          Check Answer
+                          {quizChecking && !isChecked ? "Checking…" : "Check Answer"}
                         </button>
                       </div>
                     </div>

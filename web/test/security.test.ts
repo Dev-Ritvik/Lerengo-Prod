@@ -316,3 +316,39 @@ test("M2: localhost dev never sets a cookie domain", () => {
   assert.equal(opts.domain, undefined);
   assert.equal(opts.secure, false);
 });
+
+// ---------------------------------------------------------------------------
+// M4: quiz answer keys must never ship in the client bundle. Grading moved to
+// POST /api/notes/[noteId]/assessment; the shell component may only reference
+// correctOptionId through server-returned verdicts (never as static data).
+// ---------------------------------------------------------------------------
+test("M4: note-detail-shell contains no hardcoded answer keys or explanations", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const shellPath = path.join(
+    process.cwd(),
+    "src/app/browse-notes/[noteId]/note-detail-shell.tsx",
+  );
+  const source = fs.readFileSync(shellPath, "utf8");
+
+  // The old leak: question objects seeded with `correctOptionId: "A"` etc.
+  assert.ok(!/correctOptionId:\s*"[A-D]"/.test(source), "hardcoded answer key found in client source");
+  // The old leak: explanation strings embedded next to questions.
+  assert.ok(!source.includes("Stack is a LIFO"), "answer-key explanation leaked into client source");
+  assert.ok(!source.includes("Binary search repeatedly divides"), "answer-key explanation leaked into client source");
+  assert.ok(!source.includes("Red-Black Trees guarantee O(log n) operations by maintaining color balance"), "answer-key explanation leaked into client source");
+  // Grading must go through the server assessment route.
+  assert.ok(source.includes("/assessment"), "client must submit answers to the server assessment route");
+});
+
+test("M4: assessment route returns post-grading verdicts", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const routePath = path.join(
+    process.cwd(),
+    "src/app/api/notes/[noteId]/assessment/route.ts",
+  );
+  const source = fs.readFileSync(routePath, "utf8");
+  assert.ok(source.includes("verdicts"), "server must compute per-question verdicts after grading");
+  assert.ok(/success:\s*true,[\s\S]*verdicts/.test(source) || source.includes("verdicts,\n  }"), "verdicts must be included in the response payload");
+});

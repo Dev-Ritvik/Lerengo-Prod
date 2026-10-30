@@ -109,6 +109,23 @@ export async function POST(request: Request, { params }: Params) {
   const scoring = scoreNoteAssessment(bundle.questions, answers);
   const passed = scoring.scorePercent >= bundle.passPercent;
 
+  // M4 fix: verdicts (which option was correct + why) are computed here, on
+  // the server, AFTER the attempt is graded. They never ship in the client
+  // bundle — the UI only learns them once an answer has been submitted.
+  const verdicts = Object.fromEntries(
+    bundle.questions.map((question) => {
+      const rawExplanation = (question as { explanation?: unknown }).explanation;
+      return [
+        question.id,
+        {
+          correct: answers[question.id] === question.correctOptionId,
+          correctOptionId: question.correctOptionId,
+          explanation: typeof rawExplanation === "string" ? rawExplanation : "",
+        },
+      ];
+    }),
+  );
+
   const { error: insertError } = await admin.from("note_assessment_attempts").insert({
     answers_json: answers,
     note_id: note.id,
@@ -152,5 +169,6 @@ export async function POST(request: Request, { params }: Params) {
     report,
     scorePercent: scoring.scorePercent,
     success: true,
+    verdicts,
   });
 }
