@@ -172,3 +172,52 @@ test("sweepExpiredEntries removes stale entries", () => {
   });
   assert.equal(fresh.allowed, true);
 });
+
+// ---------------------------------------------------------------------------
+// H4 — webhook receipt/user cross-check + amount validation (pure logic mirror
+// of the helpers in src/app/api/webhook/route.ts).
+// ---------------------------------------------------------------------------
+
+function receiptMatchesUser(receipt: unknown, userId: string): boolean {
+  if (typeof receipt !== "string" || receipt.length === 0) {
+    return false;
+  }
+  return /^.*_(.+)$/.test(receipt) && receipt.endsWith(`_${userId}`);
+}
+
+const MAX_VALID_AMOUNT_PAISE = 10_000_000;
+function isValidCapturedAmount(amount: unknown): boolean {
+  return (
+    typeof amount === "number" &&
+    Number.isInteger(amount) &&
+    amount > 0 &&
+    amount <= MAX_VALID_AMOUNT_PAISE
+  );
+}
+
+test("H4: receipt matching accepts our own receipt shapes", () => {
+  const uid = "8f14e45f-ea0a-4b3c-9d2e-1a2b3c4d5e6f";
+  assert.equal(receiptMatchesUser(`course_dsa-in-java_${uid}`, uid), true);
+  assert.equal(receiptMatchesUser(`note_${uid.slice(0, 8)}-${uid.slice(8)}-${uid.slice(13)}-${uid.slice(18)}-${uid.slice(23)}_${uid}`, uid), true);
+});
+
+test("H4: receipt matching rejects mismatched or missing receipts", () => {
+  const uid = "8f14e45f-ea0a-4b3c-9d2e-1a2b3c4d5e6f";
+  const other = "11111111-2222-3333-4444-555555555555";
+  assert.equal(receiptMatchesUser(`course_dsa-in-java_${other}`, uid), false);
+  assert.equal(receiptMatchesUser("random-receipt", uid), false);
+  assert.equal(receiptMatchesUser("", uid), false);
+  assert.equal(receiptMatchesUser(undefined, uid), false);
+  assert.equal(receiptMatchesUser(null, uid), false);
+});
+
+test("H4: amount validation rejects implausible amounts", () => {
+  assert.equal(isValidCapturedAmount(49900), true);
+  assert.equal(isValidCapturedAmount(10_000_000), true);
+  assert.equal(isValidCapturedAmount(10_000_001), false);
+  assert.equal(isValidCapturedAmount(0), false);
+  assert.equal(isValidCapturedAmount(-5), false);
+  assert.equal(isValidCapturedAmount(1.5), false);
+  assert.equal(isValidCapturedAmount("49900"), false);
+  assert.equal(isValidCapturedAmount(undefined), false);
+});
