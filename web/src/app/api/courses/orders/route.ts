@@ -11,6 +11,43 @@ import { enforceRouteRateLimit, getRouteAdminClient } from "@/lib/route-security
 import { logServerEvent } from "@/lib/server-log";
 import { getSessionUser } from "@/lib/tenant";
 
+/**
+ * H3 fix: courses are a global (non-tenant) catalog, so full university
+ * verification is not required — but banned accounts must never be able to
+ * create Razorpay orders or enroll. This guard blocks suspended users.
+ */
+async function getCourseBuyerGuard(): Promise<
+  { ok: true; session: NonNullable<Awaited<ReturnType<typeof getSessionUser>>> } |
+  { ok: false; status: number; error: string }
+> {
+  const session = await getSessionUser();
+  if (!session) {
+    return { ok: false, status: 401, error: "Unauthorized." };
+  }
+
+  const adminResult = getRouteAdminClient({
+    feature: "Course payments",
+    route: "/api/courses/orders",
+  });
+  if (!adminResult.ok) {
+    // Fail closed: without the service-role client we cannot verify the
+    // account is not suspended, so refuse to create payment orders.
+    return { ok: false, status: 503, error: COURSES_SCHEMA_HINT };
+  }
+
+  const { data } = await adminResult.admin
+    .from("users")
+    .select("is_banned")
+    .eq("id", session.authUser.id)
+    .maybeSingle();
+
+  if (data?.is_banned) {
+    return { ok: false, status: 403, error: "Account suspended." };
+  }
+
+  return { ok: true, session };
+}
+
 function normalizeString(value: unknown, maxLength: number) {
   if (typeof value !== "string") {
     return "";
@@ -36,10 +73,11 @@ function isMissingCoursesBackend(error: unknown) {
 }
 
 export async function POST(request: Request) {
-  const session = await getSessionUser();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  const guard = await getCourseBuyerGuard();
+  if (!guard.ok) {
+    return NextResponse.json({ error: guard.error }, { status: guard.status });
   }
+  const session = guard.session;
 
   if (await coursesBackendUsesFallback()) {
     return NextResponse.json({ error: COURSES_SCHEMA_HINT }, { status: 503 });

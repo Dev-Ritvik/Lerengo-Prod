@@ -9,7 +9,43 @@ import {
   resolveCourseRowBySlug,
   resolveEnrollmentRow,
 } from "@/lib/courses";
+import { getRouteAdminClient } from "@/lib/route-security";
 import { getSessionUser } from "@/lib/tenant";
+
+/**
+ * H3 fix: mirror the orders-route guard — banned accounts must not be able
+ * to enroll (even into free courses), and we fail closed when the
+ * service-role client is unavailable for mutation paths.
+ */
+async function getCourseBuyerGuard(): Promise<
+  { ok: true; session: NonNullable<Awaited<ReturnType<typeof getSessionUser>>> } |
+  { ok: false; status: number; error: string }
+> {
+  const session = await getSessionUser();
+  if (!session) {
+    return { ok: false, status: 401, error: "Unauthorized." };
+  }
+
+  const adminResult = getRouteAdminClient({
+    feature: "Course enrollment",
+    route: "/api/courses/enrollments",
+  });
+  if (!adminResult.ok) {
+    return { ok: false, status: 503, error: COURSES_SCHEMA_HINT };
+  }
+
+  const { data } = await adminResult.admin
+    .from("users")
+    .select("is_banned")
+    .eq("id", session.authUser.id)
+    .maybeSingle();
+
+  if (data?.is_banned) {
+    return { ok: false, status: 403, error: "Account suspended." };
+  }
+
+  return { ok: true, session };
+}
 
 function normalizeString(value: unknown, maxLength: number) {
   if (typeof value !== "string") {
@@ -45,10 +81,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await getSessionUser();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  const guard = await getCourseBuyerGuard();
+  if (!guard.ok) {
+    return NextResponse.json({ error: guard.error }, { status: guard.status });
   }
+  const session = guard.session;
 
   if (await coursesBackendUsesFallback()) {
     return NextResponse.json({ error: COURSES_SCHEMA_HINT }, { status: 503 });
