@@ -1,0 +1,141 @@
+.actionWrap {
+  display: contents;
+}
+
+.overlay {
+  backdrop-filter: blur(16px);
+  background: rgba(10, 14, 20, 0.72);
+  display: grid;
+  inset: 0;
+  place-items: center;
+  position: fixed;
+  z-index: 120;
+}
+
+.panel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, rgba(43, 49, 56, 0.96), rgba(35, 40, 47, 0.96));
+  border: 1px solid rgba(176, 187, 201, 0.14);
+  border-radius: 28px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 24px 54px rgba(8, 10, 12, 0.28);
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.logoWrap {
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.logoWrap::before {
+  background: radial-gradient(circle, rgba(150, 161, 171, 0.2), rgba(150, 161, 171, 0) 70%);
+  border-radius: 999px;
+  content: "";
+  height: 168px;
+  position: absolute;
+  width: 168px;
+}
+
+.logoFrame {
+  animation: publish-spin 1.9s infinite;
+  position: relative;
+  transform-origin: center;
+}
+
+.logo {
+  display: block;
+  height: auto;
+  width: clamp(130px, 22vw, 176px);
+}
+
+.eyebrow {
+  color: rgba(245, 240, 232, 0.62);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.title {
+  color: #f5f0e8;
+  font-size: clamp(1.5rem, 2vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.body {
+  color: rgba(245, 240, 232, 0.74);
+  font-size: 0.96rem;
+  line-height: 1.65;
+  max-width: 40ch;
+}
+
+.progressTrack {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+  width: min(320px, 100%);
+}
+
+.progressBar {
+  animation: publish-progress 1.6s ease-in-out infinite;
+  background: linear-gradient(90deg, rgba(150, 161, 171, 0.4), rgba(245, 240, 232, 0.86), rgba(150, 161, 171, 0.4));
+  border-radius: inherit;
+  height: 100%;
+}
+
+@keyframes publish-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  16% {
+    transform: rotate(96deg) scale(0.98);
+  }
+  34% {
+    transform: rotate(248deg) scale(1.02);
+  }
+  48% {
+    transform: rotate(318deg) scale(1);
+  }
+  68% {
+    transform: rotate(502deg) scale(0.99);
+  }
+  82% {
+    transform: rotate(612deg) scale(1.02);
+  }
+  100% {
+    transform: rotate(720deg) scale(1);
+  }
+}
+
+@keyframes publish-progress {
+  0% {
+    transform: translateX(-100%);
+    width: 35%;
+  }
+  48% {
+    transform: translateX(84%);
+    width: 64%;
+  }
+  100% {
+    transform: translateX(220%);
+    width: 38%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logoFrame,
+  .progressBar {
+    animation: none;
+  }
+}

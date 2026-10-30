@@ -1,0 +1,383 @@
+﻿/*
+  ForgeGO — /labs
+  Matches homepage design system.
+*/
+
+.viewport {
+  background: #1f2933;
+  min-height: 100dvh;
+}
+
+.canvas {
+  color: #F5F3F0;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 clamp(20px, 4vw, 48px) 80px;
+}
+
+/* ── Header ── */
+
+.header {
+  align-items: center;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto 1fr auto;
+  height: 72px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #1f2933;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.brand { display: inline-flex; align-items: center; text-decoration: none; }
+.logoImage { height: auto; width: clamp(120px, 10vw, 160px); }
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+.navLink {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(245, 243, 240, 0.5);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+.navLink:hover { color: #F5F3F0; }
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Buttons ── */
+
+.primaryAction {
+  background: #F5F3F0;
+  color: #1f2933;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 24px;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+.primaryAction:hover { opacity: 0.88; }
+
+.ghostAction {
+  background: transparent;
+  color: rgba(245, 243, 240, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 10px 24px;
+  text-decoration: none;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+.ghostAction:hover { border-color: rgba(255, 255, 255, 0.3); color: #F5F3F0; }
+
+/* ── Hero ── */
+
+.hero { padding: 120px 0 80px; }
+.heroInner { max-width: 720px; }
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.35);
+  margin-bottom: 16px;
+}
+
+.heroTitle {
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #F5F3F0;
+  margin: 0;
+}
+
+.heroSub {
+  margin-top: 24px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: rgba(245, 243, 240, 0.5);
+  max-width: 600px;
+}
+
+.heroCta {
+  display: flex;
+  gap: 12px;
+  margin-top: 36px;
+}
+
+/* ── Sections ── */
+
+.section { padding: 80px 0; }
+
+.altBg {
+  background: #111318;
+  margin-left: -9999px;
+  margin-right: -9999px;
+  padding-left: 9999px;
+  padding-right: 9999px;
+}
+
+.sectionInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 0;
+}
+
+.sectionTop { max-width: 680px; }
+
+.sectionTitle {
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: #F5F3F0;
+  margin: 0;
+}
+
+.sectionDesc {
+  margin-top: 16px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: rgba(245, 243, 240, 0.48);
+}
+
+/* ── Track cards ── */
+
+.trackGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 48px;
+}
+
+.trackCard {
+  background: #23282f;
+  padding: 44px 40px;
+}
+
+.trackTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #F5F3F0;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.trackBody {
+  margin-top: 16px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: rgba(245, 243, 240, 0.48);
+  max-width: 72ch;
+}
+
+.trackSignals {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.trackSignal {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  color: rgba(245, 243, 240, 0.45);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+}
+
+/* ── Process steps ── */
+
+.stepGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 48px;
+}
+
+.stepCard {
+  background: #111318;
+  padding: 32px 28px;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(245, 243, 240, 0.6);
+  margin-bottom: 20px;
+}
+
+.stepTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #F5F3F0;
+  margin: 0;
+}
+
+.stepBody {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(245, 243, 240, 0.45);
+}
+
+/* ── Review criteria ── */
+
+.criteriaList {
+  list-style: none;
+  padding: 0;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.criteriaItem {
+  background: #23282f;
+  padding: 20px 28px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(245, 243, 240, 0.55);
+}
+
+/* ── FAQ ── */
+
+.faqList {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.faqItem { background: #111318; }
+
+.faqQuestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #F5F3F0;
+  list-style: none;
+}
+.faqQuestion::-webkit-details-marker { display: none; }
+.faqQuestion svg { flex-shrink: 0; color: rgba(245, 243, 240, 0.3); transition: transform 200ms ease; }
+details[open] .faqQuestion svg { transform: rotate(180deg); }
+
+.faqAnswer {
+  padding: 0 28px 24px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(245, 243, 240, 0.48);
+  margin: 0;
+}
+
+/* ── Bottom CTA ── */
+
+.bottomCta {
+  padding: 80px 0 60px;
+  max-width: 560px;
+}
+
+.ctaHeading {
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: #F5F3F0;
+  margin: 0;
+}
+
+.ctaText {
+  margin-top: 16px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: rgba(245, 243, 240, 0.48);
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+/* ── Reveal ── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) var(--reveal-delay, 0ms),
+    transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) var(--reveal-delay, 0ms);
+}
+.reveal[data-revealed="true"] { opacity: 1; transform: translateY(0); }
+
+/* ── Responsive ── */
+
+@media (max-width: 900px) {
+  .header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    height: auto;
+    padding: 16px 0;
+    gap: 12px;
+    position: relative;
+  }
+  .stepGrid { grid-template-columns: repeat(2, 1fr); }
+  .hero { padding: 80px 0 40px; }
+}
+
+@media (max-width: 680px) {
+  .nav { gap: 20px; }
+  .heroTitle { font-size: 1.8rem; }
+  .heroCta, .ctaButtons, .headerActions { flex-direction: column; }
+  .primaryAction, .ghostAction { width: 100%; text-align: center; }
+  .stepGrid { grid-template-columns: 1fr; }
+  .trackCard { padding: 32px 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}

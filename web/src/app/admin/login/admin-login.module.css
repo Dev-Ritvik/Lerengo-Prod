@@ -1,0 +1,213 @@
+.adminCard {
+  margin: 0 auto;
+  max-width: 920px;
+}
+
+.contentStack {
+  display: grid;
+  gap: 18px;
+  margin: 0 auto;
+  max-width: 700px;
+}
+
+.heroBlock {
+  display: grid;
+  gap: 8px;
+}
+
+.eyebrow {
+  color: #6b7280;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.heroSubtext {
+  margin-bottom: 0;
+  max-width: 54ch;
+}
+
+.message {
+  border-radius: 16px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  padding: 12px 14px;
+}
+
+.error {
+  background: rgba(145, 58, 58, 0.08);
+  border: 1px solid rgba(145, 58, 58, 0.16);
+  color: #5f2b2b;
+}
+
+.notice {
+  background: rgba(31, 41, 51, 0.06);
+  border: 1px solid rgba(31, 41, 51, 0.12);
+  color: #1f2933;
+}
+
+.formPanel {
+  background: rgba(255, 255, 255, 0.36);
+  border: 1px solid rgba(107, 114, 128, 0.14);
+  border-radius: 20px;
+  box-shadow: 0 10px 24px rgba(31, 41, 51, 0.05);
+  display: grid;
+  gap: 22px;
+  padding: clamp(18px, 2.2vw, 24px);
+  width: 100%;
+}
+
+.formSection {
+  display: grid;
+  gap: 16px;
+}
+
+.formIntro {
+  display: grid;
+  gap: 4px;
+}
+
+.formTitle {
+  color: #1f2933;
+  font-size: 1.04rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.formSubtext {
+  color: #6b7280;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.label {
+  color: #1f2933;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.input {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(185, 197, 214, 0.72);
+  border-radius: 15px;
+  color: #111827;
+  font-size: 0.95rem;
+  font-weight: 500;
+  min-height: 50px;
+  padding: 11px 14px;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+  width: 100%;
+}
+
+.input:hover {
+  background: #ffffff;
+  border-color: rgba(138, 152, 173, 0.88);
+}
+
+.input:focus-visible {
+  background: #ffffff;
+  border-color: #1f2933;
+  box-shadow: 0 0 0 3px rgba(31, 41, 51, 0.12);
+  outline: none;
+}
+
+.primaryBtn {
+  justify-self: center;
+  margin-top: 8px;
+  width: min(260px, 100%);
+}
+
+.splitLine {
+  background: linear-gradient(90deg, transparent, rgba(107, 114, 128, 0.18), transparent);
+  height: 1px;
+  width: 100%;
+}
+
+.assistGrid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.secondaryBtn {
+  align-items: center;
+  background: rgba(31, 41, 51, 0.04);
+  border: 1px solid rgba(107, 114, 128, 0.2);
+  border-radius: 16px;
+  color: #1f2933;
+  display: inline-flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 14px;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.secondaryBtn:hover {
+  background: rgba(31, 41, 51, 0.07);
+  border-color: rgba(31, 41, 51, 0.24);
+  transform: translateY(-1px);
+}
+
+.helperStack {
+  display: grid;
+  gap: 8px;
+}
+
+.helperRow {
+  color: #6b7280;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.84rem;
+  gap: 6px;
+  justify-content: center;
+}
+
+.helperLink {
+  color: #1f2933;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .adminCard {
+    max-width: none;
+  }
+
+  .formPanel {
+    border-radius: 18px;
+    gap: 18px;
+    padding: 14px;
+  }
+
+  .assistGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .contentStack {
+    gap: 16px;
+  }
+
+  .primaryBtn {
+    width: 100%;
+  }
+}
+

@@ -1,0 +1,668 @@
+/*
+  LerenGO Dynamic Course Detail Page
+  One font (Sora). Accents in cool grey (#96a1ab / #bcc4cb).
+  No gradients, no colored borders, no decorative lines.
+  Hierarchy comes from weight, size, and space — nothing else.
+*/
+
+.page {
+  background: #1f2933;
+  color: #F5F3F0;
+  min-height: 100vh;
+  padding: 40px clamp(20px, 4vw, 48px) 80px;
+}
+
+/* ── Editorial Header top ── */
+.editorialHeaderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.editorialBackLink {
+  color: rgba(245, 243, 240, 0.5);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 150ms ease;
+}
+
+.editorialBackLink:hover {
+  color: #F5F3F0;
+}
+
+.editorialMetaTags {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: rgba(245, 243, 240, 0.4);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ── Hero Title Section ── */
+.editorialHero {
+  margin-bottom: 48px;
+  max-width: 800px;
+}
+
+.editorialCode {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #F5F3F0;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+.editorialTitle {
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0 0 16px 0;
+}
+
+.editorialSubtitle {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: rgba(245, 243, 240, 0.65);
+  line-height: 1.4;
+  margin: 0 0 16px 0;
+  font-weight: 400;
+}
+
+.editorialSummary {
+  font-size: 16px;
+  color: rgba(245, 243, 240, 0.5);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Content Grid ── */
+.editorialGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.8fr);
+  gap: 48px;
+  align-items: start;
+}
+
+.editorialMain {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.editorialSidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 901px) {
+  .editorialSticky {
+    position: sticky;
+    top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  .editorialGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .editorialSticky {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+
+/* ── Sections ── */
+.editorialSection {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 32px;
+}
+
+.editorialSectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+}
+
+.editorialBodyText {
+  font-size: 15px;
+  color: rgba(245, 243, 240, 0.6);
+  line-height: 1.7;
+  margin: 0 0 20px 0;
+}
+
+.editorialList {
+  display: grid;
+  gap: 12px;
+  padding-left: 20px;
+  color: rgba(245, 243, 240, 0.6);
+  line-height: 1.6;
+}
+
+.editorialNotice {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.editorialNotice strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.editorialNotice p {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(245, 243, 240, 0.5);
+  line-height: 1.5;
+}
+
+/* ── Sidebar widgets ── */
+.editorialWidgetCard {
+  background: #23282f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.widgetTitle {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.4);
+  margin: 0 0 16px 0;
+}
+
+.widgetStats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.widgetStatRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 8px;
+}
+
+.widgetStatRow span {
+  color: rgba(245, 243, 240, 0.5);
+}
+
+.widgetStatRow strong {
+  font-weight: 500;
+}
+
+.editorialSkills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.editorialSkillChip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: rgba(245, 243, 240, 0.75);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 10px;
+}
+
+.editorialRelated {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.editorialRelatedLink {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 6px;
+  transition: background 150ms ease;
+}
+
+.editorialRelatedLink:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.relatedLinkProvider {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.4);
+}
+
+.relatedLinkTitle {
+  font-size: 14px;
+  color: #F5F3F0;
+  font-weight: 600;
+}
+
+.relatedLinkMeta {
+  font-size: 12px;
+  color: rgba(245, 243, 240, 0.5);
+}
+
+/* ── Panel containers ── */
+.panel {
+  background: #23282f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.sectionHeaderCompact {
+  margin-bottom: 16px;
+}
+
+.sectionEyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.4);
+}
+
+.panelTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 6px 0 0 0;
+}
+
+.panelBody {
+  font-size: 14px;
+  color: rgba(245, 243, 240, 0.55);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Enrollment Panel styles (compatibility overrides) ── */
+.enrollmentCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.enrollmentEyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.4);
+  margin-bottom: 8px;
+}
+
+.enrollmentTitle {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  line-height: 1.35;
+}
+
+.enrollmentBody {
+  font-size: 13px;
+  color: rgba(245, 243, 240, 0.5);
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.priceStack {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.purchasePrice {
+  font-size: 24px;
+  font-weight: 700;
+  color: #F5F3F0;
+}
+
+.purchaseStrike {
+  font-size: 14px;
+  color: rgba(245, 240, 232, 0.35);
+  text-decoration: line-through;
+}
+
+.enrollButton,
+.inlineAction {
+  background: #F5F3F0;
+  color: #1f2933;
+  border: 0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+  min-height: 44px;
+}
+
+.enrollButton:hover,
+.inlineAction:hover {
+  opacity: 0.9;
+}
+
+.enrollButton:disabled,
+.inlineAction:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.progressRail {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 99px;
+  height: 6px;
+  margin: 16px 0 8px 0;
+  overflow: hidden;
+}
+
+.progressFill {
+  background: #F5F3F0;
+  height: 100%;
+}
+
+.enrollmentHint {
+  font-size: 11px;
+  color: rgba(245, 243, 240, 0.4);
+  margin: 0;
+}
+
+.certificateBlock {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 16px;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.certificateLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.4);
+}
+
+.certificateBlock strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.backLink {
+  font-size: 13px;
+  color: #F5F3F0;
+  text-decoration: underline;
+}
+
+/* ── Curriculum Component styles ── */
+.playerSurface {
+  background: #23282f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.playerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.playerMeta {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.4);
+}
+
+.playerTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 4px 0 0 0;
+}
+
+.playerPills {
+  display: flex;
+  gap: 6px;
+}
+
+.signalPill {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  font-size: 11px;
+  padding: 3px 8px;
+  color: rgba(245, 243, 240, 0.7);
+}
+
+.playerFrame,
+.playerVideo,
+.playerLocked {
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #000;
+  width: 100%;
+  min-height: 360px;
+}
+
+.playerLocked {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+  background: #1f2933;
+}
+
+.playerLocked h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.playerLocked p {
+  font-size: 13px;
+  color: rgba(245, 243, 240, 0.5);
+  max-width: 440px;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.playerSummary {
+  font-size: 13px;
+  color: rgba(245, 243, 240, 0.45);
+  line-height: 1.6;
+  margin: 16px 0 0 0;
+}
+
+/* ── Expandable Module Accordions ── */
+.moduleGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.moduleCard {
+  background: #23282f;
+  transition: background 150ms ease;
+}
+
+.moduleHeaderButton {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+}
+
+.moduleHeaderButton:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.moduleHeaderContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.moduleTitle {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.moduleSummary {
+  font-size: 13px;
+  color: rgba(245, 243, 240, 0.4);
+  margin: 0;
+}
+
+.moduleMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(245, 243, 240, 0.4);
+}
+
+.moduleCount {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Lesson list inside accordion */
+.lessonList {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.lessonCard {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 16px 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: inherit;
+  text-align: left;
+  transition: background 150ms ease;
+}
+
+.lessonCard:last-child {
+  border-bottom: 0;
+}
+
+.lessonCard:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.lessonCardActive {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.lessonMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lessonBadge {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  font-size: 11px;
+  padding: 2px 6px;
+  color: rgba(245, 243, 240, 0.6);
+  text-transform: uppercase;
+}
+
+.lessonTitle {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.lessonTime {
+  font-size: 12px;
+  color: rgba(245, 243, 240, 0.4);
+}
+
+/* ── Assessment Panel overrides ── */
+.assessmentMeta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.assessmentLocked,
+.assessmentRoomCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.assessmentLocked h3,
+.assessmentRoomCard h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.assessmentLocked p,
+.assessmentRoomCard p {
+  font-size: 14px;
+  color: rgba(245, 243, 240, 0.5);
+  line-height: 1.5;
+  margin: 0;
+  max-width: 600px;
+}

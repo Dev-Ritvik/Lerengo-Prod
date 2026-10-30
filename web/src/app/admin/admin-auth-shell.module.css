@@ -1,0 +1,519 @@
+.page {
+  background:
+    radial-gradient(circle at 12% 6%, rgba(157, 167, 178, 0.12), transparent 26%),
+    radial-gradient(circle at 86% 10%, rgba(157, 167, 178, 0.08), transparent 22%),
+    linear-gradient(150deg, #1b1f24 0%, #22272d 48%, #1f242a 100%);
+  min-height: 100dvh;
+  overflow-x: clip;
+  padding: 18px;
+}
+
+.shell {
+  color: #f3f0ea;
+  display: grid;
+  gap: 16px;
+  margin: 0 auto;
+  max-width: 1320px;
+  min-height: calc(100dvh - 36px);
+}
+
+.topBar {
+  align-items: center;
+  background: rgba(28, 32, 37, 0.84);
+  border: 1px solid rgba(157, 167, 178, 0.16);
+  border-radius: 22px;
+  box-shadow: 0 18px 36px rgba(12, 13, 15, 0.18);
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 14px;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.brand {
+  display: inline-flex;
+  transition:
+    filter 220ms ease,
+    transform 220ms ease;
+  width: clamp(136px, 13vw, 178px);
+}
+
+.brand:hover {
+  filter: drop-shadow(0 12px 24px rgba(12, 13, 15, 0.18));
+  transform: translateY(-1px);
+}
+
+.brand img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.backLink {
+  align-items: center;
+  background: rgba(83, 93, 104, 0.18);
+  border: 1px solid rgba(157, 167, 178, 0.2);
+  border-radius: 999px;
+  color: #f3f0ea;
+  display: inline-flex;
+  font-size: 0.88rem;
+  font-weight: 700;
+  min-height: 42px;
+  padding: 0 16px;
+  text-decoration: none;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.backLink:hover {
+  background: rgba(101, 112, 123, 0.26);
+  border-color: rgba(196, 203, 210, 0.22);
+  box-shadow: 0 12px 24px rgba(12, 13, 15, 0.14);
+  transform: translateY(-1px);
+}
+
+.frame {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.022), rgba(255, 255, 255, 0)),
+    linear-gradient(160deg, rgba(29, 33, 38, 0.96), rgba(22, 26, 31, 0.96));
+  border: 1px solid rgba(157, 167, 178, 0.14);
+  border-radius: 30px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 28px 58px rgba(12, 13, 15, 0.22);
+  display: grid;
+  flex: 1;
+  gap: 20px;
+  grid-template-columns: minmax(320px, 1.02fr) minmax(0, 0.98fr);
+  overflow: hidden;
+  padding: 22px;
+  position: relative;
+}
+
+.frame::before {
+  background: linear-gradient(90deg, rgba(157, 167, 178, 0), rgba(157, 167, 178, 0.4), rgba(157, 167, 178, 0));
+  content: "";
+  height: 1px;
+  inset: 0 0 auto;
+  position: absolute;
+}
+
+.heroPanel,
+.formPanel {
+  border-radius: 24px;
+  display: grid;
+  gap: 18px;
+  overflow: hidden;
+  padding: 28px;
+  position: relative;
+}
+
+.heroPanel {
+  align-content: start;
+  background:
+    radial-gradient(circle at 84% 14%, rgba(157, 167, 178, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, rgba(31, 36, 42, 0.98), rgba(24, 28, 33, 0.96));
+  border: 1px solid rgba(157, 167, 178, 0.12);
+}
+
+.formPanel {
+  align-content: start;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, rgba(65, 74, 84, 0.96), rgba(55, 64, 74, 0.96));
+  border: 1px solid rgba(176, 187, 201, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 18px 34px rgba(12, 13, 15, 0.12);
+}
+
+.eyebrow,
+.panelEyebrow {
+  color: rgba(196, 203, 210, 0.82);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.title {
+  color: #f7f4ef;
+  font-size: clamp(2.2rem, 3vw, 3.3rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
+  margin: 0;
+}
+
+.description,
+.panelCopy {
+  color: rgba(243, 240, 234, 0.78);
+  font-size: 0.98rem;
+  line-height: 1.72;
+  margin: 0;
+}
+
+.spotlight {
+  background: rgba(20, 24, 29, 0.22);
+  border: 1px solid rgba(157, 167, 178, 0.12);
+  border-radius: 20px;
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+}
+
+.spotlightEyebrow {
+  color: rgba(243, 240, 234, 0.56);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.spotlightTitle,
+.panelTitle {
+  color: #f7f4ef;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.spotlightTitle {
+  font-size: 1.18rem;
+}
+
+.chipRow,
+.checklist {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(157, 167, 178, 0.18);
+  border-radius: 999px;
+  color: rgba(243, 240, 234, 0.84);
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 700;
+  min-height: 30px;
+  padding: 5px 12px;
+}
+
+.checklist {
+  display: grid;
+}
+
+.checkItem {
+  align-items: start;
+  color: rgba(243, 240, 234, 0.78);
+  display: flex;
+  font-size: 0.92rem;
+  gap: 10px;
+  line-height: 1.58;
+}
+
+.checkItem::before {
+  align-items: center;
+  background: rgba(103, 114, 126, 0.28);
+  border: 1px solid rgba(157, 167, 178, 0.22);
+  border-radius: 999px;
+  color: #f3f0ea;
+  content: "ADM";
+  display: inline-flex;
+  font-size: 0.58rem;
+  font-weight: 800;
+  justify-content: center;
+  margin-top: 2px;
+  min-width: 32px;
+  padding: 4px 0;
+}
+
+.panelTitle {
+  font-size: 1.24rem;
+  margin: 0;
+}
+
+.message {
+  border-radius: 16px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.5;
+  padding: 12px 14px;
+}
+
+.notice {
+  background: rgba(103, 114, 126, 0.16);
+  border: 1px solid rgba(157, 167, 178, 0.24);
+  color: #f3f0ea;
+}
+
+.error {
+  background: rgba(109, 55, 55, 0.16);
+  border: 1px solid rgba(176, 104, 104, 0.24);
+  color: #f6d1d1;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.label {
+  color: #f7f4ef;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.input {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+    rgba(20, 24, 29, 0.24);
+  border: 1px solid rgba(190, 197, 210, 0.16);
+  border-radius: 16px;
+  color: #f7f4ef;
+  font: inherit;
+  min-height: 52px;
+  outline: 0;
+  padding: 12px 14px;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: rgba(243, 240, 234, 0.5);
+}
+
+.input:hover {
+  border-color: rgba(226, 232, 240, 0.26);
+}
+
+.input:focus-visible {
+  border-color: rgba(196, 203, 210, 0.32);
+  box-shadow:
+    0 0 0 3px rgba(157, 167, 178, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.primaryButton,
+.secondaryButton {
+  align-items: center;
+  border-radius: 16px;
+  display: inline-flex;
+  font-size: 0.92rem;
+  font-weight: 700;
+  justify-content: center;
+  min-height: 50px;
+  padding: 10px 16px;
+  text-decoration: none;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, #66727d, #7a8692);
+  border: 1px solid rgba(196, 203, 210, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  color: #f7f4ef;
+}
+
+.secondaryButton {
+  background: rgba(20, 24, 29, 0.14);
+  border: 1px solid rgba(157, 167, 178, 0.24);
+  color: #f7f4ef;
+}
+
+.primaryButton:hover,
+.secondaryButton:hover {
+  transform: translateY(-1px);
+}
+
+.primaryButton:hover {
+  box-shadow: 0 14px 24px rgba(12, 13, 15, 0.16);
+}
+
+.secondaryButton:hover {
+  background: rgba(20, 24, 29, 0.2);
+  border-color: rgba(196, 203, 210, 0.22);
+}
+
+.splitLine {
+  background: linear-gradient(90deg, transparent, rgba(196, 203, 210, 0.16), transparent);
+  height: 1px;
+  width: 100%;
+}
+
+.actionGrid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.helperStack {
+  display: grid;
+  gap: 10px;
+}
+
+.optionGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.optionCard {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+    rgba(20, 24, 29, 0.18);
+  border: 1px solid rgba(157, 167, 178, 0.16);
+  border-radius: 18px;
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.optionHeader {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.optionBadge {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(157, 167, 178, 0.2);
+  border-radius: 999px;
+  color: rgba(243, 240, 234, 0.88);
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 700;
+  min-height: 28px;
+  padding: 0 10px;
+}
+
+.optionTitle {
+  color: #f7f4ef;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.optionBody {
+  color: rgba(243, 240, 234, 0.74);
+  font-size: 0.88rem;
+  line-height: 1.58;
+  margin: 0;
+}
+
+.optionLink {
+  color: #f7f4ef;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.helperRow {
+  color: rgba(243, 240, 234, 0.74);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.86rem;
+  gap: 6px;
+  justify-content: center;
+}
+
+.helperLink {
+  color: #f7f4ef;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.primaryButton:focus-visible,
+.secondaryButton:focus-visible,
+.backLink:focus-visible,
+.input:focus-visible,
+.helperLink:focus-visible,
+.optionLink:focus-visible {
+  outline: 2px solid rgba(243, 240, 234, 0.72);
+  outline-offset: 2px;
+}
+
+@media (max-width: 980px) {
+  .frame {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding: 10px;
+  }
+
+  .shell {
+    min-height: calc(100dvh - 20px);
+  }
+
+  .topBar {
+    gap: 10px;
+  }
+
+  .frame {
+    border-radius: 24px;
+    padding: 14px;
+  }
+
+  .heroPanel,
+  .formPanel {
+    border-radius: 20px;
+    padding: 20px;
+  }
+
+  .actionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .optionGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding: 8px;
+  }
+
+  .topBar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .backLink {
+    min-height: 40px;
+  }
+
+  .frame {
+    padding: 12px;
+  }
+
+  .heroPanel,
+  .formPanel {
+    padding: 16px;
+  }
+}
+

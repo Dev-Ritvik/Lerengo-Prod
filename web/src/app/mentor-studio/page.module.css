@@ -1,0 +1,593 @@
+﻿/*
+  Mentor Studio — Premium Charcoal Redesign
+  Matches the new website design system (#1f2933 base, #23282f cards, #F5F3F0 text).
+  No heavy gradients, no thick borders, pure modern typography.
+*/
+
+.viewport {
+  background: #1f2933;
+  color: #F5F3F0;
+  min-height: 100dvh;
+  overflow-x: clip;
+  font-family: var(--font-sora), 'Sora', system-ui, sans-serif;
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  width: 100%;
+}
+
+.mainPanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 0 auto;
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 clamp(20px, 4vw, 48px) 80px;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(6, 9, 19, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 32px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex: 1;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logoImage {
+  height: auto;
+  width: clamp(110px, 8vw, 130px);
+}
+
+.workspaceNav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.workspaceNavItem {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: rgba(245, 243, 240, 0.5);
+  text-decoration: none;
+  transition: color 150ms ease;
+  padding: 6px 0;
+}
+
+.workspaceNavItem:hover {
+  color: #F5F3F0;
+}
+
+.workspaceNavItemActive {
+  color: #F5F3F0;
+  font-weight: 600;
+  border-bottom: 2px solid #F5F3F0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.universityField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+
+.universityLogo {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.universityName {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(245, 243, 240, 0.7);
+}
+
+.profileDock {
+  display: flex;
+  align-items: center;
+}
+
+/* ── Content Grid Layouts ── */
+.contentPane {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+}
+
+/* ── Hero Card ── */
+.heroCard {
+  background: #23282f;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.heroIdentity {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.heroAvatarWrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #F5F3F0;
+  flex-shrink: 0;
+}
+
+.heroAvatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.35);
+  margin: 0;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #F5F3F0;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(245, 243, 240, 0.5);
+  margin: 4px 0 0;
+}
+
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(245, 243, 240, 0.7);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.badgeStrong {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: #10B981;
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.actionButton {
+  background: transparent;
+  color: rgba(245, 243, 240, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 10px 20px;
+  text-decoration: none;
+  transition: all 150ms ease;
+  text-align: center;
+  cursor: pointer;
+}
+
+.actionButton:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #F5F3F0;
+}
+
+.actionPrimary {
+  background: #F5F3F0;
+  color: #1f2933;
+  border: none;
+  font-weight: 600;
+}
+
+.actionPrimary:hover {
+  background: rgba(245, 243, 240, 0.9);
+  color: #1f2933;
+}
+
+/* ── Accent Card ── */
+.accentCard {
+  background: #23282f;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.accentEyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.35);
+  margin: 0;
+}
+
+.accentTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #F5F3F0;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.accentCopy {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: rgba(245, 243, 240, 0.45);
+  margin: 0 0 8px;
+}
+
+.signalList {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.signalItem {
+  background: #23282f;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.signalLabel {
+  font-size: 12.5px;
+  color: rgba(245, 243, 240, 0.4);
+  font-weight: 500;
+}
+
+.signalValue {
+  font-size: 13px;
+  font-weight: 600;
+  color: #F5F3F0;
+  text-align: right;
+}
+
+/* ── Stats Grid ── */
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.statCard {
+  background: #23282f;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.statCard:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.statLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(245, 243, 240, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: 700;
+  color: #F5F3F0;
+  line-height: 1;
+}
+
+.statMeta {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(245, 243, 240, 0.45);
+  margin: 4px 0 0;
+}
+
+/* ── Panels / Grid ── */
+.sectionGrid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+}
+
+.panel {
+  background: #23282f;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panelWide {
+  grid-column: span 2;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.panelTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #F5F3F0;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.panelCopy {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: rgba(245, 243, 240, 0.45);
+  margin: 6px 0 0;
+}
+
+/* ── Portfolio Lists ── */
+.infoList {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.infoRow {
+  background: #23282f;
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.infoTerm {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(245, 243, 240, 0.4);
+}
+
+.infoValue {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #F5F3F0;
+}
+
+.infoSubvalue {
+  grid-column: 2;
+  font-size: 13px;
+  color: rgba(245, 243, 240, 0.45);
+  margin-top: 4px;
+}
+
+.chipRail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  font-size: 11px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(245, 243, 240, 0.6);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* ── Stack Card Lists ── */
+.stackList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stackCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stackHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stackTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #F5F3F0;
+  margin: 0;
+}
+
+.stackMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stackCopy {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(245, 243, 240, 0.5);
+  margin: 0;
+}
+
+.emptyCard {
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 32px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.emptyCard h3 {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: rgba(245, 243, 240, 0.7);
+  margin: 0;
+}
+
+.emptyCard p {
+  font-size: 13px;
+  color: rgba(245, 243, 240, 0.4);
+  margin: 0;
+}
+
+/* ── Operating Flow ── */
+.insightList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.insightItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 14px;
+  border-left: 2px solid rgba(255, 255, 255, 0.08);
+}
+
+.insightItemTitle {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #F5F3F0;
+}
+
+.insightItemBody {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(245, 243, 240, 0.45);
+  margin: 0;
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+@media (max-width: 960px) {
+  .heroGrid,
+  .sectionGrid {
+    grid-template-columns: 1fr;
+  }
+  .panelWide {
+    grid-column: span 1;
+  }
+  .statGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .infoRow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .infoSubvalue {
+    grid-column: 1;
+  }
+}

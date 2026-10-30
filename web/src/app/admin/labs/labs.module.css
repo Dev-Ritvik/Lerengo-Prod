@@ -1,0 +1,128 @@
+.layout {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+}
+
+.queueColumn,
+.sidebarColumn,
+.queueStack,
+.guidanceList,
+.metaGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.submissionCard,
+.guidanceCard,
+.metaCard {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(176, 187, 201, 0.14);
+  border-radius: 18px;
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.cardHeader {
+  align-items: start;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.cardTitleBlock {
+  display: grid;
+  gap: 6px;
+}
+
+.cardTitle {
+  color: #f9fafb;
+  font-size: 1.06rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.cardMeta,
+.summary,
+.problem,
+.metaLabel,
+.metaSubvalue,
+.guidanceBody {
+  color: rgba(249, 250, 251, 0.72);
+  line-height: 1.62;
+  margin: 0;
+}
+
+.cardMeta {
+  font-size: 0.86rem;
+}
+
+.summary,
+.problem {
+  font-size: 0.9rem;
+}
+
+.problem {
+  color: rgba(249, 250, 251, 0.82);
+}
+
+.metaGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metaLabel,
+.guidanceTitle {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.metaValue,
+.guidanceTitle {
+  color: #f9fafb;
+}
+
+.metaValue {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.metaSubvalue {
+  font-size: 0.84rem;
+}
+
+.linkList {
+  display: grid;
+  gap: 8px;
+}
+
+.linkItem {
+  color: #f9fafb;
+  font-size: 0.84rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  word-break: break-all;
+}
+
+.guidanceTitle {
+  font-size: 0.94rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-transform: none;
+}
+
+.guidanceBody {
+  font-size: 0.88rem;
+}
+
+@media (max-width: 1120px) {
+  .layout,
+  .metaGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,504 @@
+﻿/*
+  HunterGO — /huntergo
+  Matches LerenGO design system: #1f2933 base, #23282f cards, #F5F3F0 text.
+  No gradients, no bubble borders, hierarchy from weight and space.
+*/
+
+.viewport {
+  background: #1f2933;
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+
+.canvas {
+  color: #F5F3F0;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 clamp(20px, 4vw, 48px) 80px;
+}
+
+/* ── Header ── */
+
+.header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  height: 72px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #1f2933;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.headerMain {
+  align-items: center;
+  display: flex;
+  gap: 32px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logoImage {
+  height: auto;
+  width: clamp(120px, 10vw, 160px);
+}
+
+.primaryNav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navLink {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(245, 243, 240, 0.5);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.navLink:hover {
+  color: #F5F3F0;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Shared Actions & Buttons ── */
+
+.primaryAction {
+  background: #F5F3F0;
+  color: #1f2933;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 24px;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+
+.primaryAction:hover {
+  opacity: 0.88;
+}
+
+.secondaryAction,
+.cardAction {
+  background: transparent;
+  color: rgba(245, 243, 240, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 10px 24px;
+  text-decoration: none;
+  transition: border-color 150ms ease, color 150ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.secondaryAction:hover,
+.cardAction:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #F5F3F0;
+}
+
+.cardAction {
+  width: 100%;
+  margin-top: 12px;
+}
+
+/* ── Hero Section ── */
+
+.heroSection {
+  padding: 100px 0 60px;
+}
+
+.heroCopy {
+  max-width: 720px;
+}
+
+.eyebrow,
+.sectionEyebrow,
+.cardEyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.35);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.heroTitle {
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #F5F3F0;
+  margin: 0;
+}
+
+.heroBody {
+  margin-top: 24px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: rgba(245, 243, 240, 0.5);
+  max-width: 600px;
+}
+
+.heroActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 36px;
+}
+
+/* ── Core Layout Sections ── */
+
+.section {
+  padding: 80px 0;
+}
+
+.sectionHeader {
+  max-width: 680px;
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: #F5F3F0;
+  margin: 0;
+}
+
+.sectionBody {
+  margin-top: 16px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: rgba(245, 243, 240, 0.48);
+}
+
+/* ── Cards & Grid ── */
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.capabilityCard {
+  background: #23282f;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 280px;
+}
+
+.cardNumber {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(245, 243, 240, 0.3);
+  margin-bottom: 24px;
+  display: block;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #F5F3F0;
+  margin: 0 0 12px;
+}
+
+.cardBody {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(245, 243, 240, 0.45);
+  margin: 0 0 20px;
+  flex-grow: 1;
+}
+
+.pillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: rgba(245, 243, 240, 0.45);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+}
+
+/* ── Directory Panels & Empty State ── */
+
+.directoryPanel {
+  margin-top: 80px;
+}
+
+.emptyPanel {
+  background: #111318;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 48px;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.stateTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #F5F3F0;
+  margin: 0 0 12px;
+}
+
+.stateBody {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(245, 243, 240, 0.48);
+  margin: 0;
+}
+
+/* ── Profiles ── */
+
+.profileGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.profileCard {
+  background: #23282f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.avatarFallback {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #F5F3F0;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metaRail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 16px;
+  margin-top: auto;
+  font-size: 13px;
+  color: rgba(245, 243, 240, 0.45);
+}
+
+.metaRail strong {
+  color: #F5F3F0;
+  font-weight: 600;
+}
+
+/* ── Trust Split Section ── */
+
+.stateGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.statePanel {
+  background: #23282f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 40px;
+}
+
+.stateList {
+  list-style: none;
+  padding: 0;
+  margin: 32px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.listItem {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(245, 243, 240, 0.55);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.listItem::before {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(245, 243, 240, 0.4);
+  flex-shrink: 0;
+}
+
+/* ── CTA Band ── */
+
+.ctaBand {
+  padding: 80px 0 0;
+}
+
+.ctaPanel {
+  background: #111318;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+}
+
+.ctaCopy {
+  max-width: 600px;
+}
+
+.ctaTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #F5F3F0;
+  margin: 0 0 12px;
+}
+
+.ctaBody {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(245, 243, 240, 0.48);
+  margin: 0;
+}
+
+.ctaActions {
+  flex-shrink: 0;
+}
+
+/* ── Scroll Reveal / Animations ── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal[data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive design ── */
+
+@media (max-width: 960px) {
+  .cardGrid,
+  .profileGrid,
+  .stateGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ctaPanel {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px;
+  }
+}
+
+@media (max-width: 760px) {
+  .header {
+    grid-template-columns: 1fr;
+    height: auto;
+    padding: 16px 0;
+  }
+
+  .primaryNav {
+    display: none;
+  }
+  
+  .headerActions {
+    justify-content: flex-start;
+    margin-top: 12px;
+  }
+
+  .heroSection {
+    padding: 60px 0;
+  }
+
+  .heroActions,
+  .headerActions {
+    flex-wrap: wrap;
+  }
+
+  .emptyPanel {
+    padding: 32px 20px;
+  }
+
+  .statePanel {
+    padding: 28px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .capabilityCard {
+    padding: 28px 20px;
+    min-height: 0;
+  }
+
+  .profileCard {
+    padding: 24px 20px;
+  }
+
+  .ctaPanel {
+    padding: 24px 20px;
+  }
+
+  .profileHeader {
+    gap: 12px;
+  }
+}

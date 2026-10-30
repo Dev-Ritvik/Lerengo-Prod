@@ -1,0 +1,616 @@
+﻿.viewport {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+/* Cohesive glowing blobs & blueprint grid */
+.shell {
+  flex: 1;
+  min-height: 100dvh;
+  position: relative;
+  background-image: 
+    linear-gradient(rgba(150, 161, 171, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(150, 161, 171, 0.02) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.shell::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(150, 161, 171, 0.05) 0%, rgba(16, 185, 129, 0.02) 60%, transparent 100%);
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(100px);
+}
+
+.mainPanel {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* Top bar navigation */
+.topBar {
+  padding-top: 24px;
+  margin-bottom: 40px;
+}
+
+.topBarFrame {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(13, 17, 28, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  border-radius: 24px;
+  padding: 14px 28px;
+  backdrop-filter: blur(20px);
+}
+
+.brandCluster {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.brandLink {
+  display: flex;
+  align-items: center;
+}
+
+.brandLogo {
+  height: 40px;
+  width: auto;
+}
+
+.workspaceNav {
+  display: flex;
+  gap: 14px;
+}
+
+.workspaceNavItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(245, 243, 240, 0.6);
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.workspaceNavItem:hover {
+  color: #F5F3F0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.workspaceNavItemActive {
+  background: #96a1ab;
+  color: #ffffff !important;
+  box-shadow: 0 8px 20px rgba(150, 161, 171, 0.15);
+}
+
+.workspaceNavIcon {
+  filter: brightness(0) invert(0.85);
+  height: 18px;
+  width: auto;
+}
+
+.workspaceNavItemActive .workspaceNavIcon {
+  filter: brightness(0) invert(1);
+}
+
+.utilityCluster {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.universityField {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 8px 16px;
+}
+
+.universityLogo {
+  height: 24px;
+  width: auto;
+  border-radius: 6px;
+}
+
+.universityName {
+  font-size: 0.85rem;
+  font-weight: 750;
+  color: rgba(245, 243, 240, 0.85);
+}
+
+/* Hero Band with Accent Card */
+.heroBand {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 40px;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.pageHeading {
+  max-width: 640px;
+}
+
+.pageEyebrow {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #96a1ab;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.pageTitle {
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  font-weight: 900;
+  color: #F5F3F0;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.pageDescription {
+  font-size: 1.05rem;
+  color: rgba(245, 243, 240, 0.65);
+  line-height: 1.6;
+  margin-top: 16px;
+}
+
+.heroAccentCard {
+  background: linear-gradient(135deg, rgba(150, 161, 171, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 28px;
+  backdrop-filter: blur(10px);
+}
+
+.heroAccentEyebrow {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #96a1ab;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.heroAccentTitle {
+  font-size: 1.35rem;
+  font-weight: 850;
+  color: #F5F3F0;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.heroAccentBody {
+  font-size: 0.9rem;
+  color: rgba(245, 243, 240, 0.65);
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+/* Content Pane with Filter Bar */
+.contentPane {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  margin-top: 20px;
+}
+
+.filtersPanel {
+  background: rgba(13, 17, 28, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  border-radius: 28px;
+  padding: 28px;
+}
+
+.filtersHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+}
+
+.filtersKicker {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #96a1ab;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filtersTitle {
+  font-size: 1.3rem;
+  font-weight: 850;
+  color: #F5F3F0;
+  margin-top: 6px;
+}
+
+.filtersReset {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.filtersReset:hover {
+  background: #ef4444;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.filtersHint {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.filtersStrip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 220px)) 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.filterControl {
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 12px 18px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(245, 243, 240, 0.85);
+  outline: 0;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.filterControl option {
+  background-color: #23282f;
+  color: #F5F3F0;
+}
+
+.filterControl:hover {
+  border-color: rgba(150, 161, 171, 0.25);
+}
+
+.filterControl:focus {
+  border-color: #96a1ab;
+  box-shadow: 0 0 0 4px rgba(150, 161, 171, 0.1);
+}
+
+.searchField {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 6px 16px;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.searchField:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.searchField:focus-within {
+  border-color: #96a1ab;
+  box-shadow: 0 0 0 4px rgba(150, 161, 171, 0.15);
+}
+
+.searchIcon {
+  display: flex;
+  align-items: center;
+  color: rgba(245, 243, 240, 0.4);
+  margin-right: 10px;
+}
+
+.searchField input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  padding: 10px 0;
+  font-size: 0.9rem;
+  color: #F5F3F0;
+}
+
+/* Subject Sections & Notes Cards Grid */
+.subjectSection {
+  margin-bottom: 48px;
+}
+
+.subjectHeading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.subjectMarker {
+  width: 5px;
+  height: 40px;
+  background: linear-gradient(to bottom, #96a1ab, #10b981);
+  border-radius: 99px;
+  box-shadow: 0 2px 8px rgba(150, 161, 171, 0.2);
+}
+
+.subjectHeadingCopy h2 {
+  font-size: 1.45rem;
+  font-weight: 850;
+  color: #F5F3F0;
+  letter-spacing: -0.01em;
+}
+
+.subjectHeadingCopy p {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(245, 243, 240, 0.5);
+  margin-top: 4px;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.noteCard {
+  background: rgba(13, 17, 28, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-radius: 24px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.noteCard:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: #96a1ab;
+  box-shadow: 0 20px 40px rgba(150, 161, 171, 0.12);
+}
+
+.noteCardBody {
+  flex: 1;
+}
+
+.noteCardTitle {
+  font-size: 1.25rem;
+  font-weight: 850;
+  color: #F5F3F0;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.noteMetaGroup {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.noteMetaPill {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(245, 243, 240, 0.7);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.noteCard:hover .noteMetaPill {
+  background: rgba(150, 161, 171, 0.12);
+  color: #ffffff;
+}
+
+.noteCardFooter {
+  margin-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 20px;
+}
+
+.noteCardLink {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #96a1ab;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.noteCardLink::after {
+  content: "→";
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.noteCardLink:hover::after {
+  transform: translateX(4px);
+}
+
+.noteCard:hover .noteCardLink {
+  color: #7a8590;
+}
+
+/* Empty State */
+.emptyState {
+  background: rgba(13, 17, 28, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  border-radius: 28px;
+  padding: 60px;
+  text-align: center;
+  max-width: 640px;
+  margin: 60px auto;
+}
+
+.emptyState h2 {
+  font-size: 1.6rem;
+  font-weight: 850;
+  color: #F5F3F0;
+}
+
+.emptyState p {
+  font-size: 1rem;
+  color: rgba(245, 243, 240, 0.6);
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+.emptyStateLink {
+  display: inline-block;
+  background: linear-gradient(135deg, #96a1ab 0%, #7a8590 100%);
+  color: #ffffff;
+  font-weight: 750;
+  text-decoration: none;
+  padding: 12px 28px;
+  border-radius: 16px;
+  margin-top: 24px;
+  box-shadow: 0 8px 20px rgba(150, 161, 171, 0.2);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.emptyStateLink:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(150, 161, 171, 0.3);
+}
+
+.searchGlyph {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 1024px) {
+  .heroBand {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .filtersStrip {
+    grid-template-columns: 1fr;
+  }
+  .cardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .navBar {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    gap: 16px 12px !important;
+    padding: 12px 16px !important;
+    align-items: center !important;
+    border-radius: 16px !important;
+  }
+
+  .brandCluster {
+    display: contents !important;
+  }
+
+  .brandLink {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .brandLogo {
+    height: 32px !important;
+    width: auto !important;
+  }
+
+  .workspaceNav {
+    grid-column: 1 / span 2 !important;
+    grid-row: 2 !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+  }
+
+  .workspaceNavItem {
+    padding: 8px 10px !important;
+    font-size: 0.8rem !important;
+    gap: 6px !important;
+    border-radius: 10px !important;
+    flex: 1 !important;
+    justify-content: center !important;
+  }
+
+  .workspaceNavIcon {
+    height: 16px !important;
+  }
+
+  .utilityCluster {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    gap: 8px !important;
+    justify-content: flex-end !important;
+    width: auto !important;
+  }
+
+  .universityField {
+    padding: 6px 10px !important;
+    border-radius: 10px !important;
+    gap: 6px !important;
+  }
+
+  .universityLogo {
+    height: 18px !important;
+  }
+
+  .universityName {
+    display: none !important;
+  }
+
+  .filtersHeading {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .filtersTitle {
+    font-size: 0.9rem !important;
+  }
+}

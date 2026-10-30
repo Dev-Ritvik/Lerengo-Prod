@@ -1,0 +1,29 @@
+.queuePanel {
+  display: grid;
+  gap: 16px;
+}
+
+.reasonCell {
+  max-width: 260px;
+}
+
+.previewLink {
+  color: #F5F3F0;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.reviewForm {
+  display: grid;
+  gap: 10px;
+  min-width: 220px;
+}
+
+.reviewActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+

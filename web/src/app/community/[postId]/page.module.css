@@ -1,0 +1,186 @@
+@import "../project-board/project-board.module.css";
+
+.postMetaRow,
+.tagRow,
+.metaRow,
+.commentSubRow {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.commentsList,
+.commentReplies {
+  display: grid;
+  gap: 14px;
+}
+
+.commentReplies {
+  border-left: 1px solid rgba(176, 187, 201, 0.16);
+  margin-left: 18px;
+  padding-left: 18px;
+}
+
+.commentCard {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+  box-shadow: none;
+  display: grid;
+  gap: 14px;
+  padding: 20px 0;
+}
+
+.commentReplies .commentCard {
+  border-bottom: none;
+  padding: 12px 0 0 0;
+}
+
+.commentHeader {
+  align-items: start;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 46px minmax(0, 1fr);
+}
+
+.commentMeta {
+  display: grid;
+  gap: 6px;
+}
+
+.commentTopRow {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.commentAuthor {
+  color: #f9fafb;
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.commentBody {
+  color: rgba(249, 250, 251, 0.84);
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.commentActions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.textActionButton {
+  background: transparent;
+  border: 0;
+  color: rgba(249, 250, 251, 0.78);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0;
+}
+
+.textActionButtonActive {
+  color: #d1fae5;
+}
+
+.replyComposer {
+  display: grid;
+  gap: 12px;
+}
+
+.replyComposer textarea {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  color: #f9fafb;
+  font: inherit;
+  min-height: 112px;
+  outline: 0;
+  padding: 12px 14px;
+  resize: vertical;
+  width: 100%;
+}
+
+.replyComposer textarea::placeholder {
+  color: rgba(249, 250, 251, 0.62);
+}
+
+.replyComposerActions {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.formMessage {
+  color: rgba(249, 250, 251, 0.68);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  max-width: 460px;
+}
+
+.formMessageSuccess {
+  color: #d1fae5;
+}
+
+.formMessageError {
+  color: #fecaca;
+}
+
+.emptyStateCard {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.032), rgba(255, 255, 255, 0)),
+    rgba(124, 134, 151, 0.16);
+  border: 1px solid rgba(190, 197, 210, 0.12);
+  border-radius: 16px;
+  display: grid;
+  gap: 8px;
+  padding: 20px;
+}
+
+.emptyStateCard h2 {
+  color: #f9fafb;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.emptyStateCard p {
+  color: rgba(249, 250, 251, 0.72);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 620px) {
+  .replyComposerActions,
+  .commentTopRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .commentReplies {
+    margin-left: 10px;
+    padding-left: 10px;
+  }
+}
+
+.partnerGrid {
+  grid-template-columns: 1fr;
+}
+
+.metaAndTagsPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 0 4px;
+}

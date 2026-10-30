@@ -1,0 +1,250 @@
+.surfaceShell {
+  display: grid;
+  gap: 18px;
+}
+
+.surfaceHeader {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.surfaceEyebrow {
+  color: rgba(249, 250, 251, 0.62);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.surfaceTitle {
+  color: #f9fafb;
+  font-size: clamp(1.4rem, 2vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin: 0;
+}
+
+.surfaceGrid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.surfaceCard {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0)),
+    rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(176, 187, 201, 0.14);
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 14px 28px rgba(15, 23, 42, 0.12);
+  display: grid;
+  gap: 18px;
+  min-height: 100%;
+  overflow: hidden;
+  padding: 22px;
+  position: relative;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.surfaceCard:hover {
+  border-color: rgba(196, 205, 217, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 18px 34px rgba(15, 23, 42, 0.16);
+  transform: translateY(-2px);
+}
+
+.surfaceCard:hover .surfaceStatus {
+  color: rgba(249, 250, 251, 0.9);
+}
+
+.surfaceCard:hover .surfaceCardTitle {
+  color: #ffffff;
+}
+
+.surfaceCardTop {
+  display: grid;
+  gap: 12px;
+}
+
+.surfaceStatus {
+  color: rgba(249, 250, 251, 0.74);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.surfaceCardBody {
+  display: grid;
+  gap: 10px;
+}
+
+.surfaceCardTitle {
+  color: #f9fafb;
+  font-size: 1.26rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.surfaceCardText {
+  color: rgba(249, 250, 251, 0.76);
+  font-size: 0.94rem;
+  line-height: 1.62;
+  margin: 0;
+}
+
+.surfaceCardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.surfaceActionButton {
+  transition:
+    opacity 160ms ease,
+    transform 180ms ease;
+}
+
+.surfaceCard:hover .surfaceActionButton {
+  transform: translateY(-1px);
+}
+
+.surfaceActionButtonDisabled {
+  pointer-events: none;
+}
+
+.surfaceCardPending > :not(.surfaceLoadingOverlay) {
+  opacity: 0.18;
+}
+
+.surfaceLoadingOverlay {
+  backdrop-filter: blur(8px);
+  background:
+    linear-gradient(180deg, rgba(43, 49, 56, 0.72), rgba(43, 49, 56, 0.82)),
+    rgba(15, 23, 42, 0.68);
+  display: grid;
+  gap: 14px;
+  inset: 0;
+  padding: 22px;
+  position: absolute;
+}
+
+.surfaceLoadingLineShort,
+.surfaceLoadingTitle,
+.surfaceLoadingLineLong,
+.surfaceLoadingLineMedium,
+.surfaceLoadingPill,
+.surfaceLoadingButtonPrimary,
+.surfaceLoadingButtonSecondary {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.surfaceLoadingLineShort::before,
+.surfaceLoadingTitle::before,
+.surfaceLoadingLineLong::before,
+.surfaceLoadingLineMedium::before,
+.surfaceLoadingPill::before,
+.surfaceLoadingButtonPrimary::before,
+.surfaceLoadingButtonSecondary::before {
+  animation: surface-shimmer 1.35s linear infinite;
+  background: linear-gradient(
+    90deg,
+    rgba(188, 196, 203, 0) 0%,
+    rgba(188, 196, 203, 0.08) 30%,
+    rgba(245, 240, 232, 0.2) 52%,
+    rgba(188, 196, 203, 0.08) 72%,
+    rgba(188, 196, 203, 0) 100%
+  );
+  content: "";
+  inset: 0;
+  position: absolute;
+  transform: translateX(-100%);
+}
+
+.surfaceLoadingLineShort {
+  height: 14px;
+  width: 112px;
+}
+
+.surfaceLoadingPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.surfaceLoadingPill {
+  height: 28px;
+  width: 84px;
+}
+
+.surfaceLoadingTitle {
+  border-radius: 14px;
+  height: 36px;
+  width: min(220px, 72%);
+}
+
+.surfaceLoadingLineLong {
+  border-radius: 12px;
+  height: 16px;
+  width: 100%;
+}
+
+.surfaceLoadingLineMedium {
+  border-radius: 12px;
+  height: 16px;
+  width: 82%;
+}
+
+.surfaceLoadingActions {
+  align-self: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.surfaceLoadingButtonPrimary,
+.surfaceLoadingButtonSecondary {
+  border-radius: 14px;
+  height: 50px;
+}
+
+.surfaceLoadingButtonPrimary {
+  width: 258px;
+}
+
+.surfaceLoadingButtonSecondary {
+  width: 176px;
+}
+
+@keyframes surface-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (max-width: 960px) {
+  .surfaceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .surfaceCardActions {
+    flex-direction: column;
+  }
+}

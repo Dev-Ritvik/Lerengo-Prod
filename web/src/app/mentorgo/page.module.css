@@ -1,0 +1,696 @@
+﻿/*
+  MentorGO — /mentorgo
+  Matches LerenGO design system: #1f2933 base, #23282f cards, #F5F3F0 text.
+  No light mode colors are used. Premium glassmorphic look.
+*/
+
+.viewport {
+  background: #1f2933;
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+
+.canvas {
+  color: #F5F3F0;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 clamp(20px, 4vw, 48px) 80px;
+}
+
+/* ── Header & Search ── */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(6, 9, 19, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logoImage {
+  height: auto;
+  width: clamp(120px, 9vw, 140px);
+}
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  padding: 0 16px;
+  width: 280px;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.searchContainer:focus-within {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(150, 161, 171, 0.4);
+  width: 380px;
+  box-shadow: 0 0 0 3px rgba(150, 161, 171, 0.1);
+}
+
+.searchIcon {
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  color: #F5F3F0;
+  font-size: 13px;
+  height: 38px;
+  outline: none;
+  width: 100%;
+}
+
+.searchInput::placeholder {
+  color: rgba(245, 243, 240, 0.35);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Actions & Buttons ── */
+
+.primaryAction {
+  background: #F5F3F0;
+  color: #1f2933;
+  border: none;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 20px;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+
+.primaryAction:hover {
+  opacity: 0.9;
+}
+
+.secondaryAction {
+  background: transparent;
+  color: rgba(245, 243, 240, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 8px 20px;
+  text-decoration: none;
+  transition: all 150ms ease;
+}
+
+.secondaryAction:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #F5F3F0;
+}
+
+/* ── Hero Section ── */
+
+.heroSection {
+  padding: 100px 0 60px;
+}
+
+.heroCopy {
+  max-width: 720px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 240, 0.35);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.heroTitle {
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #F5F3F0;
+  margin: 0;
+}
+
+.heroBody {
+  margin-top: 24px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: rgba(245, 243, 240, 0.5);
+  max-width: 600px;
+}
+
+/* ── Shared Sections ── */
+
+.section {
+  padding: 48px 0;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #F5F3F0;
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
+}
+
+/* ── Choose Your Mentor Type ── */
+
+.typeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.typeCard {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 380px;
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.typeCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--type-accent);
+  border-radius: 16px 16px 0 0;
+  opacity: 0.5;
+  transition: opacity 250ms ease;
+}
+
+.typeCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--type-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.typeCard:hover::before {
+  opacity: 1;
+}
+
+.typeCardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.typeIconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--type-bg);
+  border: 1px solid var(--type-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.typeCardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #F5F3F0;
+  margin: 0 0 6px;
+}
+
+.typeCardDesc {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: rgba(245, 243, 240, 0.45);
+  margin: 0;
+}
+
+.pointsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1;
+}
+
+.pointItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(245, 243, 240, 0.6);
+}
+
+.checkIcon {
+  flex-shrink: 0;
+}
+
+.typeActionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+
+.typeActionButton:hover {
+  opacity: 0.85;
+}
+
+/* ── How Mentorship Works ── */
+
+.stepsGrid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.stepWrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.stepCard {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  flex: 1;
+  position: relative;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepNumberCircle {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #96a1ab;
+  color: #F5F3F0;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.stepIconInner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(150, 161, 171, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.stepTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #F5F3F0;
+  margin: 0 0 6px;
+}
+
+.stepDesc {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(245, 243, 240, 0.45);
+  margin: 0;
+}
+
+.stepArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+/* ── Popular Mentors ── */
+
+.popularHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.popularHeader .sectionTitle {
+  margin-bottom: 0;
+}
+
+.popularHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.viewAllContainer {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 24px;
+}
+
+.viewAllButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(150, 161, 171, 0.06);
+  border: 1px solid rgba(150, 161, 171, 0.2);
+  color: #96a1ab;
+  border-radius: 999px;
+  padding: 10px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 200ms ease;
+  white-space: nowrap;
+}
+
+.viewAllButton:hover {
+  background: rgba(150, 161, 171, 0.12);
+  border-color: rgba(150, 161, 171, 0.4);
+  transform: translateY(-1px);
+}
+
+.mentorGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.mentorCard {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 250ms ease;
+}
+
+.mentorCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mentorTag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+.mentorAvatarSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.avatarCircle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: #F5F3F0;
+  flex-shrink: 0;
+}
+
+.avatarImage {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.mentorIdentity {
+  min-width: 0;
+}
+
+.mentorName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #F5F3F0;
+  margin: 0 0 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.verificationBadge {
+  flex-shrink: 0;
+}
+
+.mentorHeadline {
+  font-size: 12px;
+  color: rgba(245, 243, 240, 0.4);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mentorRatingRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.star {
+  color: #FBBF24;
+}
+
+.sessionCount {
+  color: rgba(245, 243, 240, 0.4);
+}
+
+.mentorTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 24px;
+  flex-grow: 1;
+  align-items: flex-start;
+}
+
+.mentorTagPill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: rgba(245, 243, 240, 0.5);
+  font-weight: 500;
+}
+
+.bookButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--mentor-accent);
+  color: #F5F3F0;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+
+.bookButton:hover {
+  opacity: 0.9;
+}
+
+/* ── Why Choose Our Mentorship? ── */
+
+.whySection {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  padding: 32px;
+  margin-top: 40px;
+}
+
+.whyTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #96a1ab;
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
+}
+
+.highlightsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.highlightItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.highlightIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(150, 161, 171, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.highlightText {
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(245, 243, 240, 0.6);
+  font-weight: 500;
+}
+
+/* ── Scroll Reveal / Animations ── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal[data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive design ── */
+
+@media (max-width: 1024px) {
+  .typeGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .typeCard {
+    min-height: auto;
+  }
+
+  .stepsGrid {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .stepArrow {
+    transform: rotate(90deg);
+    padding: 8px 0;
+  }
+
+  .mentorGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .highlightsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    height: auto;
+    padding: 16px 0;
+    gap: 12px;
+  }
+
+  .headerLeft {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .searchContainer {
+    max-width: 100%;
+  }
+
+  .headerRight {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .mentorGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .highlightsGrid {
+    grid-template-columns: 1fr;
+  }
+}

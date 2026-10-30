@@ -1,0 +1,91 @@
+.queuePanel {
+  display: grid;
+  gap: 16px;
+}
+
+.reasonCell {
+  max-width: 260px;
+}
+
+.reviewForm {
+  display: grid;
+  gap: 10px;
+  min-width: 250px;
+}
+
+.reviewFormRow {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.reviewActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.highlightGrid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+}
+
+.highlightColumn {
+  display: grid;
+  gap: 12px;
+}
+
+.editorStack {
+  align-content: start;
+}
+
+.highlightColumnHeader {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.highlightList {
+  display: grid;
+  gap: 12px;
+}
+
+.highlightInlineForm {
+  margin-top: 10px;
+}
+
+.highlightForm {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.highlightFields {
+  display: grid;
+  gap: 12px;
+}
+
+.highlightActions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+@media (max-width: 900px) {
+  .highlightGrid,
+  .reviewFormRow {
+    grid-template-columns: 1fr;
+  }
+
+  .highlightActions,
+  .highlightColumnHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
