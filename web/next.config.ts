@@ -1,8 +1,17 @@
 import type { NextConfig } from "next";
 
+// L4 fix: `'unsafe-eval'` is only required by the webpack dev-server runtime
+// (hot reload / React refresh eval machinery). Production builds do not need
+// it, so we drop it whenever NODE_ENV === "production" to harden the CSP
+// against client-side code-injection gadgets. `'unsafe-inline'` for scripts is
+// retained in all environments because Razorpay's classic checkout loader and
+// Next.js inline bootstrap payloads depend on it; removing it requires a
+// nonce-based CSP migration (tracked separately).
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://app.cal.com https://cal.com",
+  `script-src 'self' 'unsafe-inline'${IS_PRODUCTION ? "" : " 'unsafe-eval'"} https://checkout.razorpay.com https://app.cal.com https://cal.com`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://app.cal.com https://cal.com",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data: https:",
