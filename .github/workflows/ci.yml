@@ -32,5 +32,22 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Test
+        run: npm test
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      # L5 fix: the `semgrep` npm package (0.0.1) was a placeholder that never
+      # ran any scan. Replaced with the real Semgrep CLI via pip. Runs from the
+      # web app directory against its source; ERROR-severity findings block the
+      # pipeline (`--error` => non-zero exit).
+      - name: Semgrep security scan
+        working-directory: web
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
+          semgrep scan --config auto --error --severity ERROR src middleware.ts
+
       - name: Build
         run: npm run build
