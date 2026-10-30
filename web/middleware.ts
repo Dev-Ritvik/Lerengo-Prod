@@ -487,7 +487,7 @@ export async function middleware(request: NextRequest) {
 
     if (serviceRoleKey) {
       const profileResponse = await fetch(
-        `${supabaseUrl}/rest/v1/users?id=eq.${encodeURIComponent(authUser.id)}&select=batch,campus_name,department,program_domain,university_id,verified`,
+        `${supabaseUrl}/rest/v1/users?id=eq.${encodeURIComponent(authUser.id)}&select=batch,campus_name,department,program_domain,role,university_id,verified`,
         {
           headers: {
             apikey: serviceRoleKey,

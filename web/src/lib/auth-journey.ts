@@ -2,10 +2,23 @@ import type { Database } from "@/lib/supabase/types";
 
 type UserRow = Database["public"]["Tables"]["users"]["Row"];
 
-export type JourneyProfile = Pick<
-  UserRow,
-  "batch" | "campus_name" | "department" | "program_domain" | "university_id" | "verified"
->;
+export type JourneyProfile = {
+  batch: UserRow["batch"];
+  campus_name: UserRow["campus_name"];
+  department: UserRow["department"];
+  program_domain: UserRow["program_domain"];
+  /** M6 fix: role is used to block non-admins from /admin/* post-auth targets. */
+  role?: UserRow["role"];
+  university_id: UserRow["university_id"];
+  verified: UserRow["verified"];
+};
+
+const ADMIN_ROLES = new Set(["admin", "superadmin"]);
+
+/** M6 fix: only users with an admin role may land on /admin/* after auth. */
+export function hasAdminJourneyRole(profile: JourneyProfile | null | undefined) {
+  return Boolean(profile?.role && ADMIN_ROLES.has(profile.role));
+}
 
 const CAMPUS_REQUIRED_PREFIXES = [
   "/admin",
@@ -99,6 +112,14 @@ export function resolvePostAuthDestination(
   nextPath: string | null | undefined,
 ) {
   const safeNextPath = resolveSafeAppPath(nextPath, "/");
+
+  // M6 fix: /admin/* targets are only honoured for accounts whose role is
+  // admin/superadmin. Everyone else requesting an admin path is sent to "/"
+  // (page-level requireAdminUser remains the final authority — this closes
+  // the weak-validation gap where any internal path was accepted as `next`).
+  if (safeNextPath === "/admin" || safeNextPath.startsWith("/admin/")) {
+    return hasAdminJourneyRole(profile) ? safeNextPath : "/";
+  }
 
   if (
     safeNextPath === "/" ||

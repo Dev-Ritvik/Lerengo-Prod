@@ -221,3 +221,47 @@ test("H4: amount validation rejects implausible amounts", () => {
   assert.equal(isValidCapturedAmount("49900"), false);
   assert.equal(isValidCapturedAmount(undefined), false);
 });
+
+// ---------------------------------------------------------------------------
+// M6 — resolvePostAuthDestination must not honour /admin/* next targets for
+// non-admin roles (pure mirror of src/lib/auth-journey logic).
+// ---------------------------------------------------------------------------
+const ADMIN_ROLES = new Set(["admin", "superadmin"]);
+type JourneyProfileLite = { role?: string | null };
+
+function hasAdminJourneyRole(profile: JourneyProfileLite | null | undefined) {
+  return Boolean(profile?.role && ADMIN_ROLES.has(profile.role));
+}
+
+function resolveSafeAppPathMirror(nextPath: string | null | undefined, fallback = "/") {
+  if (!nextPath || !nextPath.startsWith("/")) return fallback;
+  if (nextPath.startsWith("//")) return fallback;
+  return nextPath;
+}
+
+function resolvePostAuthDestinationMirror(
+  profile: JourneyProfileLite | null | undefined,
+  nextPath: string | null | undefined,
+) {
+  const safeNextPath = resolveSafeAppPathMirror(nextPath, "/");
+  if (safeNextPath === "/admin" || safeNextPath.startsWith("/admin/")) {
+    return hasAdminJourneyRole(profile) ? safeNextPath : "/";
+  }
+  return safeNextPath;
+}
+
+test("M6: student role cannot land on /admin via next param", () => {
+  assert.equal(resolvePostAuthDestinationMirror({ role: "user" }, "/admin/surfaces"), "/");
+  assert.equal(resolvePostAuthDestinationMirror({ role: "senior" }, "/admin"), "/");
+  assert.equal(resolvePostAuthDestinationMirror(null, "/admin/users"), "/");
+});
+
+test("M6: admin/superadmin roles keep their /admin destination", () => {
+  assert.equal(resolvePostAuthDestinationMirror({ role: "admin" }, "/admin/surfaces"), "/admin/surfaces");
+  assert.equal(resolvePostAuthDestinationMirror({ role: "superadmin" }, "/admin"), "/admin");
+});
+
+test("M6: non-admin paths are unaffected by the role gate", () => {
+  assert.equal(resolvePostAuthDestinationMirror({ role: "user" }, "/courses/dsa"), "/courses/dsa");
+  assert.equal(resolvePostAuthDestinationMirror({ role: "user" }, "//evil.com"), "/");
+});

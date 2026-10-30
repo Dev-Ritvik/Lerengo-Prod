@@ -5,6 +5,7 @@ import { getRequiredEnv } from "@/lib/env";
 import { getSupabaseCookieOptions } from "@/lib/supabase/cookie-options";
 import type { Database } from "@/lib/supabase/types";
 import { resolvePostAuthDestination, resolveSafeAppPath } from "@/lib/tenant";
+import { hasAdminJourneyRole } from "@/lib/auth-journey";
 import { setFlashMessage } from "@/lib/flash";
 
 function buildSigninRedirect(url: URL, nextPath: string, error: string, detail?: string) {
@@ -172,7 +173,7 @@ export async function GET(request: Request) {
             nextPath,
           );
           const adminDestinationPath =
-            profile?.role === "admin" && profile.verified && nextPath.startsWith("/admin")
+            hasAdminJourneyRole(profile) && profile?.verified && nextPath.startsWith("/admin")
               ? "/admin/surfaces"
               : destinationPath;
           const destination = new URL(adminDestinationPath, requestUrl.origin);
