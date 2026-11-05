@@ -7,9 +7,9 @@ import { CalcomEmbed } from "@/components/calcom-embed";
 import styles from "./page.module.css";
 
 interface MentorProfilePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default async function MentorProfilePage({ params }: MentorProfilePageProps) {
@@ -50,7 +50,8 @@ export default async function MentorProfilePage({ params }: MentorProfilePagePro
       name: profile.display_name,
       headline: profile.headline,
       bio: profile.long_bio || profile.short_bio,
-      skills: [...profile.expertise_tags, ...profile.skills],
+      // Dedupe case-insensitively: expertise_tags and skills may overlap.
+      skills: [...new Set([...(profile.expertise_tags ?? []), ...(profile.skills ?? [])].map((s: string) => s.trim()).filter(Boolean).map((s: string) => s.toLowerCase()))],
       accentColor: "#96a1ab", // Default accent
       avatarChar: profile.display_name.slice(0, 2).toUpperCase(),
       imageUrl: profile.profile_image_url,
