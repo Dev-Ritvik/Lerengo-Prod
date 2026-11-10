@@ -72,6 +72,7 @@ export function VerifyUploadClient({
   const [otpSuccessMessage, setOtpSuccessMessage] = useState<string | null>(null);
   const [uploadErrorMessage, setUploadErrorMessage] = useState<string | null>(null);
   const [uploadSuccessMessage, setUploadSuccessMessage] = useState<string | null>(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [isDragActive, setIsDragActive] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -512,9 +513,23 @@ export function VerifyUploadClient({
           <span className={styles.checkItem}>Text readable</span>
         </div>
 
+        <div className={styles.termsRow}>
+          <label className={styles.termsLabel} htmlFor="idTerms">
+            <input
+              checked={termsAccepted}
+              className={styles.termsCheckbox}
+              id="idTerms"
+              name="idTerms"
+              onChange={(event) => setTermsAccepted(event.target.checked)}
+              type="checkbox"
+            />
+            Your ID card image is encrypted in private storage, used solely to verify your student status, and automatically deleted after verification.
+          </label>
+        </div>
+
         <button
           className={`${styles.primaryBtn} ${styles.centerButton}`}
-          disabled={isSubmitting}
+          disabled={isSubmitting || !termsAccepted}
           type="submit"
         >
           {isSubmitting ? "Submitting..." : "Submit for verification"}

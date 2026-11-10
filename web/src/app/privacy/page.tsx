@@ -61,6 +61,15 @@ export default function PrivacyPage() {
             "Support requests for account, data, and privacy questions",
           ],
         },
+        {
+          title: "Student Verification &amp; ID Card Data",
+          paragraphs: [
+            "University emails and ID card uploads are collected strictly for the purpose of verifying your student status under CampusGO. They are not used for any other purpose, including advertising or marketing.",
+            "Your registration ID is stored as a SHA-256 hash (not plaintext), and only the last four digits are retained on your profile for reference.",
+            "ID card images are stored in a private, access-restricted storage bucket. Once your verification request is approved or rejected by an administrator, the raw image is immediately deleted from storage. No ID card image is retained longer than necessary for the verification decision.",
+            "You may request access to, correction of, or deletion of your verification data at any time by contacting our Grievance/Support team at support@lerengo.com. We will respond to such requests in accordance with applicable data protection law, including the Digital Personal Data Protection Act, 2023.",
+          ],
+        },
       ]}
     />
   );

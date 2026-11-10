@@ -233,6 +233,15 @@ export async function POST(request: Request) {
       .eq("id", profile.id);
   }
 
+  // DPDP compliance: purge the raw ID card image from storage once a
+  // final decision (auto-approve or auto-reject) has been recorded.
+  // Only reg_id_hash and reg_id_last4 are retained on the user record.
+  if (filePath) {
+    await supabaseAdmin.storage
+      .from(env.SUPABASE_ID_CARDS_BUCKET)
+      .remove([filePath]);
+  }
+
   return NextResponse.json({
     request_id: requestRow.id,
     score: evaluation.score,

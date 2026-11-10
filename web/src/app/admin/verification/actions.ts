@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { requireAdminUser } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { env } from "@/lib/env";
 
 function getStringValue(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
@@ -38,7 +39,7 @@ export async function reviewVerificationRequest(formData: FormData) {
 
   const { data: request, error: requestError } = await supabaseAdmin
     .from("verification_requests")
-    .select("id, user_id, university_id, status, reasons, reg_id_hash, reg_id_last4")
+    .select("id, user_id, university_id, status, reasons, reg_id_hash, reg_id_last4, id_front_path")
     .eq("id", requestId)
     .eq("university_id", appUser.university_id)
     .maybeSingle();
@@ -104,6 +105,16 @@ export async function reviewVerificationRequest(formData: FormData) {
 
   if (userUpdateError) {
     redirect("/admin/verification?error=user_update_failed");
+  }
+
+  // DPDP compliance: purge the raw ID card image from storage once the
+  // admin decision is recorded. Only the reg_id_hash and reg_id_last4
+  // are retained on the user record; the image itself is not needed
+  // after approval/rejection.
+  if (request.id_front_path) {
+    await supabaseAdmin.storage
+      .from(env.SUPABASE_ID_CARDS_BUCKET)
+      .remove([request.id_front_path]);
   }
 
   redirect(`/admin/verification?success=${decision}`);
