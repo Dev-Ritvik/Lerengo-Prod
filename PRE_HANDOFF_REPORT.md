@@ -29,6 +29,20 @@ All previously identified blockers have been resolved:
 - **Lint errors** — The 4 ESLint errors in `web/test/security.test.ts` (`require()` imports)
   converted to ES module `import` statements. Lint now passes with 0 errors.
 
+**DPDP Act (2023) Compliance Updates:**
+
+- **Consent Notice on `/verify`** — Required checkbox added to the ID card upload form with
+  the notice: "Your ID card image is encrypted in private storage, used solely to verify
+  your student status, and automatically deleted after verification." Form submission is
+  blocked until the checkbox is checked.
+- **ID Image Deletion After Decision** — Raw ID card images are deleted from Supabase
+  Storage (`SUPABASE_ID_CARDS_BUCKET`) immediately after an admin approves or rejects a
+  verification request (`web/src/app/admin/verification/actions.ts`) and after auto-approve/
+  auto-reject decisions (`web/src/app/api/verify/upload/route.ts`). Only `reg_id_hash`
+  (SHA-256) and `reg_id_last4` are retained on the user record.
+- **Privacy Policy Updated** — Dedicated "Student Verification & ID Card Data" section added
+  to `/privacy` explaining data usage, hashing, storage, purging, and user deletion rights.
+
 **Remaining deployment tasks (client-side env configuration, not code changes):**
 The client must supply live production values for Supabase, SMTP, Razorpay live keys,
 and configure DNS/auth redirects before go-live. These are environment-level, not code-level.
@@ -59,6 +73,9 @@ and configure DNS/auth redirects before go-live. These are environment-level, no
 | 5.2 | Dead Code & Console Logs | [PASS] | `web/src/` | — | All `console.error/warn` are legitimate error logging; no secrets leaked |
 | 6.1 | Razorpay Compliance Pages | [PASS] | `web/src/app/shipping-policy/page.tsx` | — | `/shipping-policy` created with Razorpay-compliant digital SaaS language; linked from footer |
 | 6.2 | Environment Variable Template | [PASS] | `web/.env.example` | — | All required keys present with dummy values |
+| 6.3 | DPDP Consent Notice | [PASS] | `web/src/app/(auth)/verify/verify-upload-client.tsx` | — | Required checkbox with privacy notice above ID upload submit button |
+| 6.4 | DPDP Image Deletion After Decision | [PASS] | `web/src/app/admin/verification/actions.ts`, `web/src/app/api/verify/upload/route.ts` | — | Raw ID card image deleted from Supabase Storage after admin approve/reject and auto-decision |
+| 6.5 | DPDP Privacy Section | [PASS] | `web/src/app/privacy/page.tsx` | — | Dedicated "Student Verification & ID Card Data" section added |
 
 ---
 
