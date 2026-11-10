@@ -111,6 +111,7 @@ export function SiteFooter() {
               <Link href="/terms">Terms of Service</Link>
               <Link href="/privacy">Privacy Policy</Link>
               <Link href="/refund-policy">Refund Policy</Link>
+              <Link href="/shipping-policy">Shipping &amp; Delivery Policy</Link>
             </div>
           </div>
 

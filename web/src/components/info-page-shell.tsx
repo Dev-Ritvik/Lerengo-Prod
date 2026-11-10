@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./info-page-shell.module.css";
 
-type InfoPageKey = "about" | "terms" | "refund-policy" | "privacy" | "contact" | "none";
+type InfoPageKey = "about" | "terms" | "refund-policy" | "privacy" | "contact" | "shipping-policy" | "none";
 
 type InfoSection = {
   title: string;
@@ -25,6 +25,7 @@ const topLinks: Array<{ href: string; key: InfoPageKey; label: string }> = [
   { href: "/refund-policy", key: "refund-policy", label: "Refund Policy" },
   { href: "/privacy", key: "privacy", label: "Privacy Policy" },
   { href: "/contact", key: "contact", label: "Contact" },
+  { href: "/shipping-policy", key: "shipping-policy", label: "Shipping & Delivery" },
 ];
 
 export function InfoPageShell({
