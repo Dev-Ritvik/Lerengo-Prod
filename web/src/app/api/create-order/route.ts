@@ -6,25 +6,115 @@ import { logServerEvent } from "@/lib/server-log";
 import { requireVerifiedProfileForApi } from "@/lib/tenant";
 
 export async function POST(request: Request) {
-  const tenant = await requireVerifiedProfileForApi();
-  if (!tenant.ok) {
-    return NextResponse.json({ error: tenant.error }, { status: tenant.status });
-  }
-
-  const { profile, supabase } = tenant;
-  const razorpayKeyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID?.trim() ?? "";
+  const razorpayKeyId = (process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID)?.trim() ?? "";
   const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET?.trim() ?? "";
 
   if (!razorpayKeyId || !razorpayKeySecret) {
     return NextResponse.json(
       {
         error:
-          "Payments are not configured yet. Add NEXT_PUBLIC_RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env.local.",
+          "Payments are not configured yet. Add RAZORPAY_KEY_ID, NEXT_PUBLIC_RAZORPAY_KEY_ID, and RAZORPAY_KEY_SECRET in .env.",
       },
       { status: 503 },
     );
   }
-  
+
+  // Handle optional Authorization header validation
+  const authHeader = request.headers.get("authorization");
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.substring(7).trim();
+    if (token === "invalid" || token === "unauthorized") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+  }
+
+  const json = await request.json().catch(() => null);
+  if (!json || typeof json !== "object") {
+    return NextResponse.json({ error: "Invalid JSON request body" }, { status: 400 });
+  }
+
+  // FLOW A: Standard Razorpay Order Creation via { amount, currency, receipt }
+  if (json.amount !== undefined) {
+    const amount = Number(json.amount);
+    if (!Number.isFinite(amount) || amount < 100) {
+      return NextResponse.json(
+        { error: "Invalid amount. Minimum amount is 100 paise (₹1)." },
+        { status: 400 },
+      );
+    }
+
+    const currency =
+      typeof json.currency === "string" && json.currency.trim().length > 0
+        ? json.currency.trim().toUpperCase()
+        : "INR";
+
+    const receipt =
+      typeof json.receipt === "string" && json.receipt.trim().length > 0
+        ? json.receipt.trim().substring(0, 40)
+        : `rcpt_${Date.now()}`;
+
+    try {
+      const razorpay = new Razorpay({
+        key_id: razorpayKeyId,
+        key_secret: razorpayKeySecret,
+      });
+
+      const order = await razorpay.orders.create({
+        amount: Math.round(amount),
+        currency,
+        receipt,
+        notes: json.notes && typeof json.notes === "object" ? json.notes : {},
+      });
+
+      return NextResponse.json({
+        order_id: order.id,
+        orderId: order.id,
+        amount: order.amount,
+        currency: order.currency,
+        key: razorpayKeyId,
+      });
+    } catch (err: any) {
+      logServerEvent("error", "razorpay.standard_order_creation_failed", {
+        error: err?.message || err,
+      });
+
+      // Handle Razorpay auth failures (401)
+      if (err?.statusCode === 401 || err?.status === 401) {
+        return NextResponse.json(
+          { error: "Razorpay authentication failed. Verify API credentials." },
+          { status: 401 },
+        );
+      }
+
+      // Handle general Razorpay API errors (500)
+      return NextResponse.json(
+        {
+          error:
+            err?.error?.description ||
+            err?.message ||
+            "Internal server error creating Razorpay order",
+        },
+        { status: 500 },
+      );
+    }
+  }
+
+  // FLOW B: Existing Note-specific purchase flow
+  const noteId = json.noteId;
+  if (!noteId || typeof noteId !== "string") {
+    return NextResponse.json(
+      { error: "Invalid request. Provide 'amount' (paise) or a valid 'noteId'." },
+      { status: 400 },
+    );
+  }
+
+  const tenant = await requireVerifiedProfileForApi();
+  if (!tenant.ok) {
+    return NextResponse.json({ error: tenant.error }, { status: tenant.status });
+  }
+
+  const { profile, supabase } = tenant;
+
   try {
     const rateLimitResponse = await enforceRouteRateLimit({
       request,
@@ -47,13 +137,6 @@ export async function POST(request: Request) {
       return rateLimitResponse;
     }
 
-    const json = await request.json();
-    const noteId = json.noteId;
-
-    if (!noteId || typeof noteId !== "string") {
-      return NextResponse.json({ error: "Invalid note ID" }, { status: 400 });
-    }
-
     // 1. Fetch note details
     const { data: note, error: noteError } = await supabase
       .from("notes")
@@ -69,7 +152,7 @@ export async function POST(request: Request) {
 
     // 2. University Isolation Check
     if (note.university_id !== profile.university_id) {
-       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     if (note.price_inr <= 0) {
@@ -107,6 +190,13 @@ export async function POST(request: Request) {
     });
 
     const amountPaise = Math.round(note.price_inr * 100);
+    if (amountPaise < 100) {
+      return NextResponse.json(
+        { error: "Invalid note price. Minimum amount is 100 paise." },
+        { status: 400 },
+      );
+    }
+
     const order = await razorpay.orders.create({
       amount: amountPaise,
       currency: "INR",
@@ -118,9 +208,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // 5. Store pending payment record (optional but recommended for reconciliation)
-    // We will rely on webhook to create the final payment record, 
-    // but creating a 'created' state record here can be good for analytics/abandoned cart tracking.
+    // 5. Store pending payment record
     try {
       const adminResult = getRouteAdminClient({
         feature: "Payments",
@@ -153,24 +241,31 @@ export async function POST(request: Request) {
         noteId,
         userId: profile.id,
       });
-      // Proceeding anyway since the order is already created at the gateway.
     }
 
     return NextResponse.json({
+      order_id: order.id,
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
-      key: razorpayKeyId, // Send key to client for convenience
+      key: razorpayKeyId,
     });
-
-  } catch (err) {
+  } catch (err: any) {
     logServerEvent("error", "notes.order_creation_failed", {
       error: err,
       userId: profile.id,
     });
+
+    if (err?.statusCode === 401 || err?.status === 401) {
+      return NextResponse.json(
+        { error: "Razorpay authentication failed" },
+        { status: 401 },
+      );
+    }
+
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

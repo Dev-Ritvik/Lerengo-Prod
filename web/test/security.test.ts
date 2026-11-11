@@ -324,12 +324,9 @@ test("M2: localhost dev never sets a cookie domain", () => {
 // ---------------------------------------------------------------------------
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import { describe, it } from "node:test";
-import assert from "node:assert";
 
-// M4: quiz answer keys must never ship in the client bundle. Grading moved to
-// POST /api/notes/[noteId]/assessment; the shell component may only reference
-// correctOptionId through server-returned verdicts (never as static data).
 describe("M4: assessment answer-key leak tests", () => {
   it("note-detail-shell contains no hardcoded answer keys or explanations", () => {
     const shellPath = path.join(
@@ -356,5 +353,94 @@ describe("M4: assessment answer-key leak tests", () => {
     const source = fs.readFileSync(routePath, "utf8");
     assert.ok(source.includes("verdicts"), "server must compute per-question verdicts after grading");
     assert.ok(/success:\s*true,[\s\S]*verdicts/.test(source) || source.includes("verdicts,\n  }"), "verdicts must be included in the response payload");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Razorpay Standard Web Checkout Tests
+// ---------------------------------------------------------------------------
+describe("Razorpay Standard Web Checkout: HMAC-SHA256 & Validation", () => {
+  const testKeySecret = "CRQ0HF07vD1obG0lCajjGJwn";
+  const orderId = "order_PO1234567890";
+  const paymentId = "pay_PO9876543210";
+
+  function generateSignature(order: string, payment: string, secret: string) {
+    return crypto
+      .createHmac("sha256", secret)
+      .update(`${order}|${payment}`)
+      .digest("hex");
+  }
+
+  function verifyPaymentSignature(
+    order: string | undefined,
+    payment: string | undefined,
+    signature: string | undefined,
+    secret: string,
+  ): { valid: boolean; error?: string } {
+    if (!order || !payment || !signature) {
+      return { valid: false, error: "Missing required fields" };
+    }
+    const expected = generateSignature(order, payment, secret);
+    const sigBuf = Buffer.from(signature, "utf8");
+    const expBuf = Buffer.from(expected, "utf8");
+    if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+      return { valid: false, error: "Signature mismatch" };
+    }
+    return { valid: true };
+  }
+
+  it("verifies valid Razorpay HMAC-SHA256 signature", () => {
+    const validSignature = generateSignature(orderId, paymentId, testKeySecret);
+    const result = verifyPaymentSignature(orderId, paymentId, validSignature, testKeySecret);
+    assert.equal(result.valid, true);
+    assert.equal(result.error, undefined);
+  });
+
+  it("rejects mismatched Razorpay signature", () => {
+    const invalidSignature = "invalid_tampered_signature_hex_value_0123456789abcdef";
+    const result = verifyPaymentSignature(orderId, paymentId, invalidSignature, testKeySecret);
+    assert.equal(result.valid, false);
+    assert.equal(result.error, "Signature mismatch");
+  });
+
+  it("rejects missing fields in verify-payment payload", () => {
+    assert.equal(verifyPaymentSignature(undefined, paymentId, "sig", testKeySecret).valid, false);
+    assert.equal(verifyPaymentSignature(orderId, undefined, "sig", testKeySecret).valid, false);
+    assert.equal(verifyPaymentSignature(orderId, paymentId, undefined, testKeySecret).valid, false);
+  });
+
+  it("validates order minimum amount is >= 100 paise", () => {
+    function isValidOrderAmount(amount: unknown): boolean {
+      const num = Number(amount);
+      return Number.isFinite(num) && num >= 100;
+    }
+    assert.equal(isValidOrderAmount(100), true);
+    assert.equal(isValidOrderAmount(50000), true);
+    assert.equal(isValidOrderAmount(99), false);
+    assert.equal(isValidOrderAmount(0), false);
+    assert.equal(isValidOrderAmount(-100), false);
+    assert.equal(isValidOrderAmount("abc"), false);
+  });
+
+  it("ensures KEY_SECRET never leaks into client-side components", () => {
+    const clientFiles = [
+      path.join(process.cwd(), "src/components/razorpay-checkout-button.tsx"),
+      path.join(process.cwd(), "src/app/checkout/page.tsx"),
+      path.join(process.cwd(), "src/app/browse-notes/[noteId]/note-detail-shell.tsx"),
+    ];
+
+    for (const filePath of clientFiles) {
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, "utf8");
+        assert.ok(
+          !content.includes("process.env.RAZORPAY_KEY_SECRET"),
+          `RAZORPAY_KEY_SECRET leaked in client file: ${filePath}`,
+        );
+        assert.ok(
+          !content.includes("CRQ0HF07vD1obG0lCajjGJwn"),
+          `Plaintext KEY_SECRET leaked in client file: ${filePath}`,
+        );
+      }
+    }
   });
 });

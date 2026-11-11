@@ -125,19 +125,48 @@ export function CourseEnrollmentPanel({
         amount: payload.amount,
         currency: payload.currency,
         description: payload.courseTitle ?? courseTitle,
-        handler: () => {
-          setNotice("Payment submitted. Course access will unlock after confirmation. Refreshing...");
+        handler: async (response?: {
+          razorpay_order_id?: string;
+          razorpay_payment_id?: string;
+          razorpay_signature?: string;
+        }) => {
+          setNotice("Payment captured. Verifying signature...");
+          if (response?.razorpay_signature) {
+            try {
+              await fetch("/api/verify-payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(response),
+              });
+            } catch {
+              // Webhook handles fulfillment independently if direct call fails
+            }
+          }
+          setNotice("Payment confirmed! Unlocking course access...");
           window.setTimeout(() => {
             router.refresh();
-          }, 2500);
+          }, 1500);
         },
         key: payload.key,
+        modal: {
+          ondismiss: () => {
+            setIsSubmitting(false);
+            setError("Checkout was cancelled.");
+          },
+        },
         name: "LerenGO SkillGO",
         order_id: payload.orderId,
         theme: {
           color: "#96a1ab",
         },
       });
+
+      if (typeof (instance as any).on === "function") {
+        (instance as any).on("payment.failed", (failedRes: any) => {
+          setIsSubmitting(false);
+          setError(failedRes?.error?.description || "Payment failed. Please try again.");
+        });
+      }
 
       instance.open();
     } catch {

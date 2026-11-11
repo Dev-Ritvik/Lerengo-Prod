@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -11,6 +11,7 @@ import {
   type StructuredNoteUnit,
 } from "@/lib/note-content";
 import type { NoteAssessmentSummary } from "@/lib/note-assessments";
+import { RazorpayCheckoutButton } from "@/components/razorpay-checkout-button";
 import styles from "./page.module.css";
 
 type RelatedNote = {
@@ -1348,7 +1349,23 @@ export function NoteDetailShell({
                     </div>
                   </div>
 
-                  <p style={{ fontSize: "0.78rem", color: "#94a3b8", marginBottom: "12px", fontWeight: 650 }}>Select payment method to simulate checkout:</p>
+                  <div style={{ marginBottom: "20px" }}>
+                    <RazorpayCheckoutButton
+                      amountPaise={Math.max(100, Math.round(priceInr * 100))}
+                      currency="INR"
+                      name="LerenGO Notes"
+                      description={`Unlock full notes: ${title}`}
+                      notes={{ noteId }}
+                      prefill={{ name: userName, email }}
+                      buttonText={`Pay ${priceLabel} with Razorpay`}
+                      onSuccess={() => {
+                        setHasUnlockedAccess(true);
+                        setPayStep("success");
+                      }}
+                    />
+                  </div>
+
+                  <p style={{ fontSize: "0.78rem", color: "#94a3b8", marginBottom: "12px", fontWeight: 650 }}>Or select sandbox demo simulation:</p>
                   
                   <div className={styles.paymentMethods}>
                     <button type="button" onClick={handleSimulateUnlock} className={styles.payMethodBtn}>
