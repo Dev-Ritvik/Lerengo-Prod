@@ -138,9 +138,9 @@ export function RazorpayCheckoutButton({
         description,
         order_id: orderData.order_id,
         prefill: {
-          name: prefill?.name || "",
-          email: prefill?.email || "",
-          contact: prefill?.contact || "",
+          ...(prefill?.name?.trim() ? { name: prefill.name.trim() } : {}),
+          ...(prefill?.email?.trim() ? { email: prefill.email.trim() } : {}),
+          ...(prefill?.contact?.trim() ? { contact: prefill.contact.trim() } : {}),
         },
         notes: notes || {},
         theme: {

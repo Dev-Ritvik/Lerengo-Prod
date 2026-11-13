@@ -262,6 +262,11 @@ export default function CheckoutPage() {
               name="LerenGO"
               description={`Payment of ₹${amountInr.toFixed(0)}`}
               buttonText={`Pay ₹${amountInr.toFixed(0)} with Razorpay`}
+              prefill={{
+                name: "Test User",
+                email: "test.student@lerengo.dev",
+                contact: "+919876543210",
+              }}
               onSuccess={(result) => {
                 setLastPaymentResult(result);
               }}
